@@ -3,6 +3,7 @@ package pl.intelligent.finance.entity.impl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.intelligent.finance.entity.IExpenditureCategory;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Entity
 @Table(name = "EXPENDITURE_CATEGORY")
 public class ExpenditureCategory implements IExpenditureCategory {
@@ -19,7 +21,7 @@ public class ExpenditureCategory implements IExpenditureCategory {
     @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, length = 50)
     private String name;
 
     @Column(name = "PARENT_CATEGORY_ID", nullable = true)

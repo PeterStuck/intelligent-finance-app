@@ -12,9 +12,9 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Entity
 @Table(name = "EXPENDITURE_RECORD")
-@ToString
 public class ExpenditureRecord implements IExpenditureRecord {
 
     @Id
@@ -26,19 +26,19 @@ public class ExpenditureRecord implements IExpenditureRecord {
             name = "EXPENDITURE_RECORD_SEQ",
             allocationSize = 5
     )
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "AMOUNT")
+    @Column(name = "AMOUNT", nullable = false)
     private Double amount;
 
-    @Column(name = "EXPENDITURE_CATEGORY_ID")
+    @Column(name = "EXPENDITURE_CATEGORY_ID", nullable = false)
     private Integer categoryId;
 
-    @Column(name = "BANK_STATEMENT_ID")
+    @Column(name = "BANK_STATEMENT_ID", nullable = false, length = 20)
     private String bankStatementId;
 
     @Override

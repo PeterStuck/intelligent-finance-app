@@ -3,6 +3,7 @@ package pl.intelligent.finance.entity.impl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.intelligent.finance.entity.IBankStatement;
 
 import javax.persistence.Column;
@@ -13,12 +14,13 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Entity
 @Table(name = "BANK_STATEMENT")
 public class BankStatement implements IBankStatement {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false, length = 20)
     private String id;
 
     @Override
