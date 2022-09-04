@@ -12,6 +12,8 @@ public interface IExpenditureRecordService {
 
     IExpenditureRecord create(IExpenditureRecord entity) throws Exception;
 
+    List<IExpenditureRecord> create(List<IExpenditureRecord> entities) throws Exception;
+
     void delete(IExpenditureRecord entity);
 
     void deleteById(Long id);

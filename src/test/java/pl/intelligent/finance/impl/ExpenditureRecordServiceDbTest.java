@@ -11,6 +11,7 @@ import pl.intelligent.finance.entity.IExpenditureRecord;
 import pl.intelligent.finance.entity.impl.ExpenditureRecord;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,6 +86,50 @@ public class ExpenditureRecordServiceDbTest extends ServiceTestBase {
         IExpenditureRecord recordToCreate = createEntity(STORED_RECORD_NAME, NOT_EXISTING_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
 
         assertThrows(DataIntegrityViolationException.class,  () -> service.create(recordToCreate));
+    }
+
+    @Test
+    @DisplayName("Should persist all provided records when there is no integration issues")
+    public void createBatchTest() throws Exception {
+        String newRecordName = "newRecord";
+        String newRecordName2 = "newRecord2";
+        String newRecordName3 = "newRecord3";
+
+        IExpenditureRecord recordToCreate = createEntity(newRecordName, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
+        IExpenditureRecord recordToCreate2 = createEntity(newRecordName2, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 5.0);
+        IExpenditureRecord recordToCreate3 = createEntity(newRecordName3, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 12.0);
+
+        List<IExpenditureRecord> recordsToCreate = Arrays.asList(recordToCreate, recordToCreate2, recordToCreate3);
+
+        List<IExpenditureRecord> persistedRecords = service.create(recordsToCreate);
+        assertNotNull(persistedRecords);
+        assertEquals(recordsToCreate.size(), persistedRecords.size());
+
+        for (int i = 0; i < persistedRecords.size(); i++) {
+            IExpenditureRecord persistedRecord = persistedRecords.get(i);
+            IExpenditureRecord expectedRecord = recordsToCreate.get(i);
+            expectedRecord.setId(persistedRecord.getId());
+            assertEquals(expectedRecord, persistedRecord);
+
+            IExpenditureRecord storedRecord = service.findByNameAndBankStatementId(expectedRecord.getName(), expectedRecord.getBankStatementId());
+            assertNotNull(storedRecord);
+        }
+    }
+
+    @Test
+    @DisplayName("Should persist all provided records when there is no integration issues")
+    public void createBatchIntegrityIssueTest() throws Exception {
+        String newRecordName = "newRecord";
+        String newRecordName2 = "newRecord2";
+        String newRecordName3 = "newRecord3";
+
+        IExpenditureRecord recordToCreate = createEntity(newRecordName, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
+        IExpenditureRecord recordToCreate2 = createEntity(newRecordName2, NOT_EXISTING_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 5.0);
+        IExpenditureRecord recordToCreate3 = createEntity(newRecordName3, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 12.0);
+
+        List<IExpenditureRecord> recordsToCreate = Arrays.asList(recordToCreate, recordToCreate2, recordToCreate3);
+
+        assertThrows(DataIntegrityViolationException.class, () -> service.create(recordsToCreate));
     }
 
     @Test
