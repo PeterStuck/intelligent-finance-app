@@ -7,6 +7,7 @@ import lombok.ToString;
 import pl.intelligent.finance.entity.IExpenditureCategory;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,5 +53,19 @@ public class ExpenditureCategory implements IExpenditureCategory {
 
     public void setParentCategoryId(Integer parentCategoryId) {
         this.parentCategoryId = parentCategoryId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExpenditureCategory that = (ExpenditureCategory) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) &&
+                Objects.equals(parentCategoryId, that.parentCategoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, parentCategoryId);
     }
 }

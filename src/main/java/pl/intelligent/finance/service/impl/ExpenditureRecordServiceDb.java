@@ -6,12 +6,13 @@ import pl.intelligent.finance.entity.IExpenditureRecord;
 import pl.intelligent.finance.entity.impl.ExpenditureRecord;
 import pl.intelligent.finance.repository.ExpenditureRecordRepository;
 import pl.intelligent.finance.service.IExpenditureRecordService;
+import pl.intelligent.finance.service.ServiceBase;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpenditureRecordServiceDb implements IExpenditureRecordService {
+public class ExpenditureRecordServiceDb extends ServiceBase implements IExpenditureRecordService {
 
     @Autowired
     private ExpenditureRecordRepository repository;
@@ -29,8 +30,8 @@ public class ExpenditureRecordServiceDb implements IExpenditureRecordService {
     }
 
     @Override
-    public IExpenditureRecord create(IExpenditureRecord entity) {
-        return repository.save((ExpenditureRecord) entity);
+    public IExpenditureRecord create(IExpenditureRecord entity) throws Exception {
+        return withException(() -> repository.saveAndFlush((ExpenditureRecord) entity));
     }
 
     @Override

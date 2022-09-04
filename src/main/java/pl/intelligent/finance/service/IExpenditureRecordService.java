@@ -10,7 +10,7 @@ public interface IExpenditureRecordService {
 
     List<IExpenditureRecord> findByBankStatementId(String bankStatementId);
 
-    IExpenditureRecord create(IExpenditureRecord entity);
+    IExpenditureRecord create(IExpenditureRecord entity) throws Exception;
 
     void delete(IExpenditureRecord entity);
 

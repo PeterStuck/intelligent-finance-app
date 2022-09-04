@@ -4,41 +4,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import pl.intelligent.finance.entity.IExpenditureRecord;
 import pl.intelligent.finance.entity.impl.ExpenditureRecord;
-import pl.intelligent.finance.repository.ExpenditureRecordRepository;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-public class ExpenditureRecordServiceDbTest {
-
-    private static String STORED_BANK_STATEMENT_ID = "062022";
-    private static String STORED_BANK_STATEMENT_ID2 = "072022";
-    private static String NOT_EXISTING_BANK_STATEMENT_ID = "not_existing_bsid";
-
-    private static Integer STORED_EXPENDITURE_CATEGORY_ID = 1;
-
-    private static String NOT_EXISTING_RECORD_NAME = "not_existing_record";
-    private static String STORED_RECORD_NAME = "record1";
-    private static String STORED_RECORD_NAME2 = "record2";
-    private static String STORED_RECORD_NAME3 = "record3";
-    private static String STORED_RECORD_NAME4 = "record4";
-
-    @MockBean
-    private ExpenditureRecordRepository repository;
+@DataJpaTest
+public class ExpenditureRecordServiceDbTest extends ServiceTestBase {
 
     @Autowired
     @Qualifier("expenditureRecordServiceDb")
@@ -47,98 +25,101 @@ public class ExpenditureRecordServiceDbTest {
     @Test
     @DisplayName("Should return all records associated with provided bank statement id")
     public void findByBankStatementIdTest() {
-        List<ExpenditureRecord> expectedRecords = createExpectedRecords();
+        List<IExpenditureRecord> entities = service.findByBankStatementId(STORED_BANK_STATEMENT_ID);
+        assertEquals(4, entities.size());
 
-        List<ExpenditureRecord> expectedReturnList = expectedRecords.stream()
-                .filter(rec -> rec.getBankStatementId().equals(STORED_BANK_STATEMENT_ID))
-                .collect(Collectors.toList());
+        IExpenditureRecord record = entities.get(0);
+        assertEquals(10.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
 
-        when(repository.findByBankStatementId(STORED_BANK_STATEMENT_ID)).thenReturn(expectedReturnList);
+        record = entities.get(1);
+        assertEquals(8.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME2, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
 
-        List<IExpenditureRecord> records = service.findByBankStatementId(STORED_BANK_STATEMENT_ID);
+        record = entities.get(2);
+        assertEquals(5.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME3, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
 
-        assertEquals(3, records.size());
-        assertEquals(expectedReturnList, records);
-
-        verify(repository).findByBankStatementId(STORED_BANK_STATEMENT_ID);
+        record = entities.get(3);
+        assertEquals(11.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME4, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
     }
 
     @Test
     @DisplayName("Should return single record with provided bank statement id and name if exits")
     public void findByNameAndBankStatementIdTest() {
-        ExpenditureRecord expectedEntity = createExpectedEntity(1L, STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
-        when(repository.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID)).thenReturn(expectedEntity);
-
-        IExpenditureRecord entity = service.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
-        assertEquals(expectedEntity, entity);
-
-        verify(repository).findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
+        IExpenditureRecord record = service.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
+        assertNotNull(record);
+        assertEquals(STORED_RECORD_NAME, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(10.0, record.getAmount());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
     }
 
     @Test
     @DisplayName("Should persist record when there are no integration issues")
-    public void createTest() {
-        ExpenditureRecord expectedEntity = createExpectedEntity(1L, STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
-        when(repository.save(any())).thenReturn(expectedEntity);
+    public void createTest() throws Exception {
+        String newRecordName = "newRecord";
+        IExpenditureRecord recordToCreate = createEntity(newRecordName, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
 
-        IExpenditureRecord persistedEntity = service.create(expectedEntity);
-        assertNotNull(persistedEntity);
-        assertEquals(expectedEntity, persistedEntity);
+        IExpenditureRecord persistedRecord = service.create(recordToCreate);
+        assertNotNull(persistedRecord);
+        recordToCreate.setId(persistedRecord.getId());
+        assertEquals(recordToCreate, persistedRecord);
 
-        verify(repository).save(any());
+        IExpenditureRecord storedRecord = service.findByNameAndBankStatementId(newRecordName, STORED_BANK_STATEMENT_ID);
+        assertEquals(storedRecord, persistedRecord);
+    }
+
+    @Test
+    @DisplayName("Should throw exception if there are some integration issues")
+    public void createIntegrationIssueTest() {
+        IExpenditureRecord recordToCreate = createEntity(STORED_RECORD_NAME, NOT_EXISTING_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0);
+
+        assertThrows(DataIntegrityViolationException.class,  () -> service.create(recordToCreate));
     }
 
     @Test
     @DisplayName("Should delete entity from persistence store if found")
     public void deleteTest() {
-        List<ExpenditureRecord> allRecords = createExpectedRecords();
-        when(repository.findByBankStatementId(STORED_BANK_STATEMENT_ID)).thenReturn(allRecords);
-        doAnswer(invocation -> {
-            deleteFromList(allRecords, allRecords.get(0));
-            return null;
-        }).when(repository).delete(any());
+        IExpenditureRecord record = service.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
+        assertNotNull(record);
 
-        service.delete(allRecords.get(0));
+        service.delete(record);
 
-        List<IExpenditureRecord> result = service.findByBankStatementId(STORED_BANK_STATEMENT_ID);
-        assertEquals(3, result.size());
-
-        verify(repository).delete(any());
+        record = service.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
+        assertNull(record);
     }
 
-    private boolean deleteFromList(List<ExpenditureRecord> records, ExpenditureRecord entityToDelete) {
-        return deleteFromList(records, entityToDelete.getId());
+    @Test
+    @DisplayName("Should delete entity by instance id from persistence store if found")
+    public void deleteByIdTest() {
+        IExpenditureRecord record = service.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
+        assertNotNull(record);
+
+        service.deleteById(record.getId());
+
+        record = service.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
+        assertNull(record);
     }
 
-    private boolean deleteFromList(List<ExpenditureRecord> records, Long id) {
-        ExpenditureRecord record = records.stream()
-                .filter(rec -> rec.getId().equals(id))
-                .findFirst().orElse(null);
-        if (record == null) {
-            throw new EntityNotFoundException("Entity with id: " + id + " not found");
-        }
-
-        records.remove(record);
-
-        return true;
+    @Test
+    @DisplayName("Should throw exception when during deletion entity with provided ID was not found")
+    public void deleteByIdNotFoundTest() {
+        assertThrows(EmptyResultDataAccessException.class, () -> service.deleteById(99L));
     }
 
-    private List<ExpenditureRecord> createExpectedRecords() {
-        AtomicLong entityCounter = new AtomicLong(1);
-        List<ExpenditureRecord> records = new ArrayList<>();
-
-        records.add(createExpectedEntity(entityCounter.incrementAndGet(), STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 10.0));
-        records.add(createExpectedEntity(entityCounter.incrementAndGet(), STORED_RECORD_NAME2, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 8.0));
-        records.add(createExpectedEntity(entityCounter.incrementAndGet(), STORED_RECORD_NAME3, STORED_BANK_STATEMENT_ID2, STORED_EXPENDITURE_CATEGORY_ID, 1.0));
-        records.add(createExpectedEntity(entityCounter.incrementAndGet(), STORED_RECORD_NAME4, STORED_BANK_STATEMENT_ID, STORED_EXPENDITURE_CATEGORY_ID, 1.0));
-
-        return records;
-    }
-
-    private ExpenditureRecord createExpectedEntity(Long id, String name, String bankStatementId,
-                                                   int categoryId, double amount) {
+    private IExpenditureRecord createEntity(String name, String bankStatementId,
+                                           int categoryId, double amount) {
         ExpenditureRecord entity = (ExpenditureRecord) service.createInstance();
-        entity.setId(id);
         entity.setName(name);
         entity.setBankStatementId(bankStatementId);
         entity.setCategoryId(categoryId);
