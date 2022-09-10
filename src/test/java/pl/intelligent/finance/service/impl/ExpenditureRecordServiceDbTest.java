@@ -1,4 +1,4 @@
-package pl.intelligent.finance.impl;
+package pl.intelligent.finance.service.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.entity.IExpenditureRecord;
 import pl.intelligent.finance.entity.impl.ExpenditureRecord;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +24,98 @@ public class ExpenditureRecordServiceDbTest extends ServiceTestBase {
     @Autowired
     @Qualifier("expenditureRecordServiceDb")
     private IExpenditureRecordService service;
+
+    @Test
+    @DisplayName("Should return all ids associated to records")
+    public void findAllIdsTest() {
+        List<Long> ids = service.findAllIds();
+        assertEquals(4, ids.size());
+
+        assertTrue(ids.contains(1L));
+        assertTrue(ids.contains(2L));
+        assertTrue(ids.contains(3L));
+        assertTrue(ids.contains(4L));
+    }
+
+    @Test
+    @DisplayName("Should return empty list when there are no records found")
+    @Sql(scripts = "/sql/02_create_tables.sql") // recreate schema without populating
+    public void findAllIdsEmptyListTest() {
+        List<Long> ids = service.findAllIds();
+        assertEquals(0, ids.size());
+    }
+
+    @Test
+    @DisplayName("Should return record by id if exists")
+    public void findByIdTest() {
+        IExpenditureRecord entity = service.findById(1L);
+        assertNotNull(entity);
+        assertEquals(STORED_RECORD_NAME, entity.getName());
+        assertEquals(10.0, entity.getAmount());
+        assertEquals(STORED_BANK_STATEMENT_ID, entity.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, entity.getCategoryId());
+    }
+
+    @Test
+    @DisplayName("Should return null when record with provided id not exists")
+    public void findByIdNotFoundTest() {
+        IExpenditureRecord entity = service.findById(99L);
+        assertNull(entity);
+    }
+
+    @Test
+    @DisplayName("Should return all records associated with one of ids")
+    public void findByIdsTest() {
+        List<Long> ids = Arrays.asList(1L, 2L, 3L);
+        List<IExpenditureRecord> entities = service.findByIds(ids);
+        assertEquals(3, entities.size());
+
+        IExpenditureRecord record = entities.get(0);
+        assertEquals(10.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
+
+        record = entities.get(1);
+        assertEquals(8.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME2, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
+
+        record = entities.get(2);
+        assertEquals(5.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME3, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
+    }
+
+    @Test
+    @DisplayName("Should return all records associated with one of ids")
+    public void findByIdsOneOfTheRecordsNotFoundTest() {
+        List<Long> ids = Arrays.asList(1L, 2L, 99L);
+        List<IExpenditureRecord> entities = service.findByIds(ids);
+        assertEquals(2, entities.size());
+
+        IExpenditureRecord record = entities.get(0);
+        assertEquals(10.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
+
+        record = entities.get(1);
+        assertEquals(8.0, record.getAmount());
+        assertEquals(STORED_RECORD_NAME2, record.getName());
+        assertEquals(STORED_BANK_STATEMENT_ID, record.getBankStatementId());
+        assertEquals(STORED_EXPENDITURE_CATEGORY_ID, record.getCategoryId());
+    }
+
+    @Test
+    @DisplayName("Should return empty list when list of ids is empty")
+    public void findByIdsEmptyListTest() {
+        List<Long> ids = Collections.emptyList();
+        List<IExpenditureRecord> entities = service.findByIds(ids);
+        assertEquals(0, entities.size());
+    }
 
     @Test
     @DisplayName("Should return all records associated with provided bank statement id")

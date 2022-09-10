@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.entity.impl.BankStatement;
 import pl.intelligent.finance.entity.impl.ExpenditureRecord;
 
@@ -25,7 +26,7 @@ public class ExpenditureRecordRepositoryTest extends RepositoryTestBase {
 
     @Test
     @DisplayName("Should return all stored records")
-    public void testFindAll() {
+    public void findAllTest() {
         List<ExpenditureRecord> entities = expenditureRecordRepository.findAll();
 
         assertThat(entities.size()).isEqualTo(4);
@@ -200,6 +201,26 @@ public class ExpenditureRecordRepositoryTest extends RepositoryTestBase {
 
         record = expenditureRecordRepository.findByNameAndBankStatementId(STORED_RECORD_NAME, STORED_BANK_STATEMENT_ID);
         assertNull(record);
+    }
+
+    @Test
+    @DisplayName("Should return all stored record ids")
+    public void findAllIdsTest() {
+        List<Long> ids = expenditureRecordRepository.findAllIds();
+        assertThat(ids.size()).isEqualTo(4);
+
+        assertTrue(ids.contains(1L));
+        assertTrue(ids.contains(2L));
+        assertTrue(ids.contains(3L));
+        assertTrue(ids.contains(4L));
+    }
+
+    @Test
+    @DisplayName("Should return empty list when no records are stored")
+    @Sql(scripts = "/sql/02_create_tables.sql") // recreate schema without populating
+    public void findAllIdsEmptyListTest() {
+        List<Long> ids = expenditureRecordRepository.findAllIds();
+        assertThat(ids.size()).isEqualTo(0);
     }
 
 }

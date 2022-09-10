@@ -9,8 +9,8 @@ import pl.intelligent.finance.repository.ExpenditureRecordRepository;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 import pl.intelligent.finance.service.ServiceBase;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ExpenditureRecordServiceDb extends ServiceBase<IExpenditureRecord, ExpenditureRecord> implements IExpenditureRecordService {
@@ -19,15 +19,28 @@ public class ExpenditureRecordServiceDb extends ServiceBase<IExpenditureRecord, 
     private ExpenditureRecordRepository repository;
 
     @Override
+    public IExpenditureRecord findById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<IExpenditureRecord> findByIds(Collection<Long> ids) {
+        return mapToInterface(repository.findAllById(ids));
+    }
+
+    @Override
+    public List<Long> findAllIds() {
+        return repository.findAllIds();
+    }
+
+    @Override
     public IExpenditureRecord findByNameAndBankStatementId(String name, String bankStatementId) {
         return repository.findByNameAndBankStatementId(name, bankStatementId);
     }
 
     @Override
     public List<IExpenditureRecord> findByBankStatementId(String bankStatementId) {
-        return repository.findByBankStatementId(bankStatementId).stream()
-                .map(el -> (IExpenditureRecord) el)
-                .collect(Collectors.toList());
+        return mapToInterface(repository.findByBankStatementId(bankStatementId));
     }
 
     @Override
@@ -38,8 +51,10 @@ public class ExpenditureRecordServiceDb extends ServiceBase<IExpenditureRecord, 
     @Transactional
     @Override
     public List<IExpenditureRecord> create(List<IExpenditureRecord> entities) throws Exception {
-        return withException(() -> mapToInterface(
-                repository.saveAllAndFlush(mapToEntity(entities)))
+        return withException(() ->
+                mapToInterface(
+                        repository.saveAllAndFlush(mapToEntity(entities))
+                )
         );
     }
 

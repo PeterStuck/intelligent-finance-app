@@ -1,10 +1,9 @@
-package pl.intelligent.finance.impl;
+package pl.intelligent.finance.service.impl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.service.IExpenditureRecordService;
-import pl.intelligent.finance.service.impl.ExpenditureRecordServiceDb;
 
 @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_repository_data.sql"})
 @Import(ServiceTestBase.TestConfig.class)
