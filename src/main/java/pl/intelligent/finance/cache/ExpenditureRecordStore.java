@@ -11,7 +11,7 @@ public interface ExpenditureRecordStore {
 
     StorableExpenditureRecord add(StorableExpenditureRecord expenditureRecord) throws InvalidDataException;
 
-    StorableExpenditureRecord batchAdd(List<StorableExpenditureRecord> expenditureRecords);
+    List<StorableExpenditureRecord> batchAdd(List<StorableExpenditureRecord> expenditureRecords) throws InvalidDataException;
 
     List<StorableExpenditureRecord> getAllByBankStatementId(String bankStatementId);
 

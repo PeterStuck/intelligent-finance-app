@@ -62,13 +62,41 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
         return ExpenditureRecordAdapter.createExpenditureRecord(persistedRecord);
     }
 
-    private void addToCache(HazelcastExpenditureRecord expenditureRecord) {
-        expenditureRecordMap.set(expenditureRecord.getId(), expenditureRecord);
+    @Override
+    public List<StorableExpenditureRecord> batchAdd(List<StorableExpenditureRecord> expenditureRecords) throws InvalidDataException {
+        var result = attemptBatchOperation(() -> batchAddToService(expenditureRecords));
+
+        if (result.isError()) {
+            throw result.exception();
+        }
+
+        List<HazelcastExpenditureRecord> cacheRecords = result.entities();
+
+        cacheRecords.forEach(this::addToCache);
+
+        return cacheRecords.stream()
+                .map(er -> (StorableExpenditureRecord) er)
+                .toList();
     }
 
-    @Override
-    public StorableExpenditureRecord batchAdd(List<StorableExpenditureRecord> expenditureRecords) {
-        return null;
+    private List<HazelcastExpenditureRecord> batchAddToService(List<StorableExpenditureRecord> expenditureRecords) throws Exception {
+        IExpenditureRecordService service = serviceProvider.getExpenditureRecordService();
+        List<IExpenditureRecord> mappedEntities = expenditureRecords.stream()
+                .map(er -> ExpenditureRecordAdapter.createExpenditureRecord(er, service))
+                .toList();
+
+        List<IExpenditureRecord> persistedRecords = service.create(mappedEntities);
+        if (persistedRecords == null || persistedRecords.isEmpty()) {
+            throw ExceptionUtil.entityCreationError("Expenditure record");
+        }
+
+        return persistedRecords.stream()
+                .map(ExpenditureRecordAdapter::createExpenditureRecord)
+                .toList();
+    }
+
+    private void addToCache(HazelcastExpenditureRecord expenditureRecord) {
+        expenditureRecordMap.set(expenditureRecord.getId(), expenditureRecord);
     }
 
     @Override

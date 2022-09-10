@@ -27,7 +27,7 @@ public class ExpenditureRecordValidator implements ExpenditureRecordStore {
     }
 
     @Override
-    public StorableExpenditureRecord batchAdd(List<StorableExpenditureRecord> expenditureRecords) {
+    public List<StorableExpenditureRecord> batchAdd(List<StorableExpenditureRecord> expenditureRecords) throws InvalidDataException {
         return recordStore.batchAdd(expenditureRecords);
     }
 
