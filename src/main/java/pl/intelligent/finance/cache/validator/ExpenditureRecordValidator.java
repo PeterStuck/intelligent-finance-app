@@ -1,22 +1,34 @@
 package pl.intelligent.finance.cache.validator;
 
 import pl.intelligent.finance.cache.ExpenditureRecordStore;
+import pl.intelligent.finance.cache.ExpenditureRecordStoreWithService;
+import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.resource.entity.StorableExpenditureRecord;
 
 import java.util.List;
 
 public class ExpenditureRecordValidator implements ExpenditureRecordStore {
 
-    private ExpenditureRecordStore recordStore;
+    private ExpenditureRecordStoreWithService recordStore;
 
-    public ExpenditureRecordValidator(ExpenditureRecordStore recordStore) {
+    public ExpenditureRecordValidator(ExpenditureRecordStoreWithService recordStore) {
         this.recordStore = recordStore;
     }
 
     @Override
-    public StorableExpenditureRecord add(StorableExpenditureRecord expenditureRecord) {
+    public StorableExpenditureRecord get(Long id) {
+        return recordStore.get(id);
+    }
+
+    @Override
+    public StorableExpenditureRecord add(StorableExpenditureRecord expenditureRecord) throws InvalidDataException {
         // TODO some validation logic
         return recordStore.add(expenditureRecord);
+    }
+
+    @Override
+    public StorableExpenditureRecord batchAdd(List<StorableExpenditureRecord> expenditureRecords) {
+        return recordStore.batchAdd(expenditureRecords);
     }
 
     @Override

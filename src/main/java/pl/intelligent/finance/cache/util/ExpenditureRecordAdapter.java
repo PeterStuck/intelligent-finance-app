@@ -2,6 +2,8 @@ package pl.intelligent.finance.cache.util;
 
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureRecord;
 import pl.intelligent.finance.entity.IExpenditureRecord;
+import pl.intelligent.finance.resource.entity.StorableExpenditureRecord;
+import pl.intelligent.finance.service.IExpenditureRecordService;
 
 public class ExpenditureRecordAdapter {
 
@@ -17,6 +19,21 @@ public class ExpenditureRecordAdapter {
                 .amount(recordDb.getAmount())
                 .categoryId(recordDb.getCategoryId())
                 .build();
+    }
+
+    public static IExpenditureRecord createExpenditureRecord(StorableExpenditureRecord record, IExpenditureRecordService service) {
+        if (record == null) {
+            return null;
+        }
+
+        IExpenditureRecord recordDb = service.createInstance();
+        recordDb.setId(record.getId());
+        recordDb.setName(record.getName());
+        recordDb.setAmount(record.getAmount());
+        recordDb.setCategoryId(record.getCategoryId());
+        recordDb.setBankStatementId(record.getBankStatementId());
+
+        return recordDb;
     }
 
 }
