@@ -7,7 +7,6 @@ import pl.intelligent.finance.entity.IExpenditureRecord;
 import pl.intelligent.finance.entity.impl.ExpenditureRecord;
 import pl.intelligent.finance.repository.ExpenditureRecordRepository;
 import pl.intelligent.finance.service.IExpenditureRecordService;
-import pl.intelligent.finance.service.ServiceBase;
 
 import java.util.Collection;
 import java.util.List;

@@ -6,6 +6,7 @@ import pl.intelligent.finance.entity.IExpenditureCategory;
 import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -61,11 +62,15 @@ public class ExpenditureCategory implements IExpenditureCategory {
         return parentCategoryId;
     }
 
-    public void addMatcher(ExpenditureCategoryMatcher matcher) {
-        if (matchers != null) {
-            matcher.setCategory(this);
-            matchers.add(matcher);
+    @Override
+    public void addMatcher(IExpenditureCategoryMatcher matcher) {
+        if (matchers == null) {
+            matchers = new ArrayList<>();
         }
+
+        var tmpMatcher = (ExpenditureCategoryMatcher) matcher;
+        tmpMatcher.setCategory(this);
+        matchers.add(tmpMatcher);
     }
 
     @Override
@@ -75,14 +80,17 @@ public class ExpenditureCategory implements IExpenditureCategory {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public void setParentCategoryId(Integer parentCategoryId) {
         this.parentCategoryId = parentCategoryId;
     }

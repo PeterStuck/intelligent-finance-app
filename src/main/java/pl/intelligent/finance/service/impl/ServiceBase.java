@@ -1,4 +1,4 @@
-package pl.intelligent.finance.service;
+package pl.intelligent.finance.service.impl;
 
 import java.util.List;
 import java.util.concurrent.Callable;

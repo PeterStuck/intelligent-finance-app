@@ -53,14 +53,17 @@ public class ExpenditureCategoryMatcher implements IExpenditureCategoryMatcher {
         return matcherType;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @Override
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
 
+    @Override
     public void setMatcherType(ExpenditureCategoryMatcherType matcherType) {
         this.matcherType = matcherType;
     }
