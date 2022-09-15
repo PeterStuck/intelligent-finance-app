@@ -18,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
-@Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
-public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
+public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheBaseTest {
 
     private HazelcastExpenditureRecordCache hzExpenditureRecordCache;
 
@@ -31,6 +30,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void getAllByBankStatementIdTest() {
         List<StorableExpenditureRecord> records = hzExpenditureRecordCache.getAllByBankStatementId(STORED_BANK_STATEMENT_ID);
         assertEquals(4, records.size());
@@ -64,6 +64,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void getAllByBankStatementIdEmptyResultTest() {
         List<StorableExpenditureRecord> records = hzExpenditureRecordCache.getAllByBankStatementId(NOT_EXISTING_BANK_STATEMENT_ID);
         assertEquals(0, records.size());
@@ -73,6 +74,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void addTest() throws InvalidDataException {
         final String recordName = "newRecord";
 
@@ -94,6 +96,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void addRecordWithExistingNameAndBankStatementIdTest() throws InvalidDataException {
         List<StorableExpenditureRecord> recordsBefore = hzExpenditureRecordCache.getAllByBankStatementId(STORED_BANK_STATEMENT_ID);
         assertEquals(4, recordsBefore.size());
@@ -115,6 +118,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void addRecordBankStatementIdNotExistsTest() throws InvalidDataException {
         List<StorableExpenditureRecord> recordsBefore = hzExpenditureRecordCache.getAllByBankStatementId(NOT_EXISTING_BANK_STATEMENT_ID);
         assertEquals(0, recordsBefore.size());
@@ -136,6 +140,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void addRecordExpenditureCategoryNotExistsTest() throws InvalidDataException {
         final String recordName = "newRecord";
 
@@ -158,6 +163,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void batchAddTest() throws InvalidDataException {
         final String recordName = "newRecord";
         final String recordName2 = "newRecord2";
@@ -217,6 +223,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void batchAddOneOfRecordsWithExistingNameTest() throws InvalidDataException {
         final String recordName = "newRecord";
         final String recordName2 = "newRecord2";
@@ -250,6 +257,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void batchAddOneOfRecordsWithNotExistingBankStatementIdTest() throws InvalidDataException {
         final String recordName = "newRecord";
         final String recordName2 = "newRecord2";
@@ -283,6 +291,7 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheTest {
     }
 
     @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
     public void batchAddOneOfRecordsWithNotExistingExpenditureCategoryIdTest() throws InvalidDataException {
         final String recordName = "newRecord";
         final String recordName2 = "newRecord2";

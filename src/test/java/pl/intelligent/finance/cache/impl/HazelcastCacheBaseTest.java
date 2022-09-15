@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public abstract class HazelcastCacheTest {
+public abstract class HazelcastCacheBaseTest {
 
     @Autowired
     protected HazelcastInstance hazelcastInstance;
@@ -43,11 +43,9 @@ public abstract class HazelcastCacheTest {
             HazelcastConfigBuilder.initialize(hazelcastInstance, serviceProvider);
             HAZELCAST_INSTANCE_INITIALIZED = true;
         }
-    }
 
-    @AfterEach
-    public void tearDown() {
         IMap<Object, Object> map = hazelcastInstance.getMap(HazelcastExpenditureRecordCache.CACHE_NAME);
+        map.evictAll();
         map.loadAll(true);
     }
 
