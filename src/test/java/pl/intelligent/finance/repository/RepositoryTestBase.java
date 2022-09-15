@@ -10,6 +10,11 @@ public abstract class RepositoryTestBase {
     protected static String NOT_EXISTING_BANK_STATEMENT_ID = "not_existing_bsid";
 
     protected static Integer STORED_EXPENDITURE_CATEGORY_ID = 1;
+    protected static Integer STORED_EXPENDITURE_CATEGORY_ID2 = 2;
+    protected static Integer STORED_EXPENDITURE_CATEGORY_ID3 = 3;
+    protected static String STORED_EXPENDITURE_CATEGORY = "category1";
+    protected static String STORED_EXPENDITURE_CATEGORY2 = "category2";
+    protected static String STORED_EXPENDITURE_CATEGORY3 = "category3";
 
     protected static String NOT_EXISTING_RECORD_NAME = "not_existing_record";
     protected static String STORED_RECORD_NAME = "record1";

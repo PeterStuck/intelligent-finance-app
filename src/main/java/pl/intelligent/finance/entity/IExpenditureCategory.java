@@ -1,5 +1,7 @@
 package pl.intelligent.finance.entity;
 
+import java.util.List;
+
 public interface IExpenditureCategory {
 
     Integer getId();
@@ -8,6 +10,6 @@ public interface IExpenditureCategory {
 
     Integer getParentCategoryId();
 
-    // TODO list of matchers
+    List<IExpenditureCategoryMatcher> getMatchers();
 
 }
