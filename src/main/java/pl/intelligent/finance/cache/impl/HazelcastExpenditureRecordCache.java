@@ -19,16 +19,13 @@ import java.util.List;
 
 public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<HazelcastExpenditureRecord> implements ExpenditureRecordStoreWithService {
 
-    private ServiceProvider serviceProvider;
-
-    private static final String CACHE_NAME_PREFIX = "if-";
     public static final String CACHE_NAME = CACHE_NAME_PREFIX + "expenditure-records";
 
     private IMap<Long, HazelcastExpenditureRecord> expenditureRecordMap;
 
     public HazelcastExpenditureRecordCache(HazelcastInstance hazelcastInstance, ServiceProvider serviceProvider) {
+        super(serviceProvider);
         this.expenditureRecordMap = hazelcastInstance.getMap(CACHE_NAME);
-        this.serviceProvider = serviceProvider;
     }
 
     @Override
@@ -53,7 +50,7 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
 
     private HazelcastExpenditureRecord addToService(StorableExpenditureRecord expenditureRecord) throws Exception {
         IExpenditureRecordService service = serviceProvider.getExpenditureRecordService();
-        IExpenditureRecord recordToCreate = ExpenditureRecordAdapter.createExpenditureRecord(expenditureRecord, service);
+        IExpenditureRecord recordToCreate = ExpenditureRecordAdapter.createExpenditureRecord(service, expenditureRecord);
         IExpenditureRecord persistedRecord = service.create(recordToCreate);
         if (persistedRecord == null) {
             throw ExceptionUtil.entityCreationError("Expenditure Record");
@@ -82,7 +79,7 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
     private List<HazelcastExpenditureRecord> batchAddToService(List<StorableExpenditureRecord> expenditureRecords) throws Exception {
         IExpenditureRecordService service = serviceProvider.getExpenditureRecordService();
         List<IExpenditureRecord> mappedEntities = expenditureRecords.stream()
-                .map(er -> ExpenditureRecordAdapter.createExpenditureRecord(er, service))
+                .map(er -> ExpenditureRecordAdapter.createExpenditureRecord(service, er))
                 .toList();
 
         List<IExpenditureRecord> persistedRecords = service.create(mappedEntities);
@@ -105,7 +102,6 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
         Predicate predicate = entryObject.get("bankStatementId").equal(bankStatementId);
 
         return expenditureRecordMap.values(predicate).stream().toList();
-
     }
 
     @Override

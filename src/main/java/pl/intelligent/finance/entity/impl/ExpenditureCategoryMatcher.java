@@ -3,6 +3,7 @@ package pl.intelligent.finance.entity.impl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import pl.intelligent.finance.entity.ExpenditureCategoryMatcherType;
 import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
 
 import javax.persistence.*;

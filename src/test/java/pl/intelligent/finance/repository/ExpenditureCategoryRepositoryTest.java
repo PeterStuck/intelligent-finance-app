@@ -10,9 +10,10 @@ import pl.intelligent.finance.entity.IExpenditureCategory;
 import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
 import pl.intelligent.finance.entity.impl.ExpenditureCategory;
 import pl.intelligent.finance.entity.impl.ExpenditureCategoryMatcher;
-import pl.intelligent.finance.entity.impl.ExpenditureCategoryMatcherType;
+import pl.intelligent.finance.entity.ExpenditureCategoryMatcherType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +34,7 @@ public class ExpenditureCategoryRepositoryTest extends RepositoryTestBase {
         assertEquals(null, category.getParentCategoryId());
         assertEquals(3, category.getMatchers().size());
 
-        List<IExpenditureCategoryMatcher> matchers = category.getMatchers();
+        List<? extends IExpenditureCategoryMatcher> matchers = category.getMatchers();
 
         String pattern = "^test$";
         IExpenditureCategoryMatcher matcher = getMatcherByPattern(matchers, pattern);
@@ -135,7 +136,7 @@ public class ExpenditureCategoryRepositoryTest extends RepositoryTestBase {
         assertNotNull(category);
         assertEquals(3, category.getMatchers().size());
 
-        category.addMatcher(testMatcher);
+        category.setMatchers(Collections.singletonList(testMatcher));
 
         ExpenditureCategory persistedCategory = categoryRepository.saveAndFlush(category);
         assertNotNull(persistedCategory);
@@ -187,7 +188,7 @@ public class ExpenditureCategoryRepositoryTest extends RepositoryTestBase {
         return new ExpenditureCategoryMatcher(null, pattern, matcherType, null);
     }
 
-    private IExpenditureCategoryMatcher getMatcherByPattern(List<IExpenditureCategoryMatcher> matchers, String pattern) {
+    private IExpenditureCategoryMatcher getMatcherByPattern(List<? extends IExpenditureCategoryMatcher> matchers, String pattern) {
         return matchers.stream()
                 .filter(matcher -> matcher.getPattern().equals(pattern))
                 .findFirst().orElse(null);

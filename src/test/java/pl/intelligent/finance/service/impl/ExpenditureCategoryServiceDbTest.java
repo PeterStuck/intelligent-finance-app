@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.entity.IExpenditureCategory;
 import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
-import pl.intelligent.finance.entity.impl.ExpenditureCategoryMatcherType;
+import pl.intelligent.finance.entity.ExpenditureCategoryMatcherType;
 import pl.intelligent.finance.service.IExpenditureCategoryMatcherService;
 import pl.intelligent.finance.service.IExpenditureCategoryService;
 
@@ -128,8 +128,7 @@ public class ExpenditureCategoryServiceDbTest extends ServiceTestBase {
 
         IExpenditureCategory instance = service.createInstance();
         instance.setName(name);
-        instance.addMatcher(matcherInstance);
-        instance.addMatcher(matcherInstance2);
+        instance.setMatchers(Arrays.asList(matcherInstance, matcherInstance2));
 
         IExpenditureCategory persistedCategory = service.create(instance);
         assertNotNull(persistedCategory);

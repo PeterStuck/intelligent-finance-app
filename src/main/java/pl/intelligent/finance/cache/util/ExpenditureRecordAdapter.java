@@ -21,7 +21,7 @@ public class ExpenditureRecordAdapter {
                 .build();
     }
 
-    public static IExpenditureRecord createExpenditureRecord(StorableExpenditureRecord record, IExpenditureRecordService service) {
+    public static IExpenditureRecord createExpenditureRecord(IExpenditureRecordService service, StorableExpenditureRecord record) {
         if (record == null) {
             return null;
         }

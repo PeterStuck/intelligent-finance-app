@@ -3,11 +3,20 @@ package pl.intelligent.finance.cache.impl;
 import org.springframework.dao.DataAccessException;
 import pl.intelligent.finance.exception.ExceptionUtil;
 import pl.intelligent.finance.exception.InvalidDataException;
+import pl.intelligent.finance.service.provider.ServiceProvider;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public abstract class HazelcastCacheBase<T> {
+
+    protected static final String CACHE_NAME_PREFIX = "if-";
+
+    protected ServiceProvider serviceProvider;
+
+    public HazelcastCacheBase(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+    }
 
     protected CacheEntityWithException<T> attemptOperation(Callable<T> cacheFunction) {
         InvalidDataException exception = null;

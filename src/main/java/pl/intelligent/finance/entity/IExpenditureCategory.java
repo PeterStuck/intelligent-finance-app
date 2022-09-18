@@ -16,8 +16,8 @@ public interface IExpenditureCategory {
 
     void setParentCategoryId(Integer parentCategoryId);
 
-    List<IExpenditureCategoryMatcher> getMatchers();
+    List<? extends IExpenditureCategoryMatcher> getMatchers();
 
-    void addMatcher(IExpenditureCategoryMatcher matcher);
+    void setMatchers(List<? extends IExpenditureCategoryMatcher> matchers);
 
 }

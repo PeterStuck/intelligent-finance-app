@@ -65,6 +65,19 @@
         </map-store>
     </map>
 
+    <map name="if-expenditure-categories" >
+        <backup-count>1</backup-count>
+        <in-memory-format>BINARY</in-memory-format>
+        <max-idle-seconds>0</max-idle-seconds>
+        <time-to-live-seconds>0</time-to-live-seconds>
+        <eviction eviction-policy="NONE" max-size-policy="PER_NODE" size="0"/>
+        <map-store enabled="true" initial-mode="LAZY">
+            <write-delay-seconds>0</write-delay-seconds>
+            <write-batch-size>1</write-batch-size>
+            <write-coalescing>true</write-coalescing>
+        </map-store>
+    </map>
+
     <multimap name="default">
         <backup-count>1</backup-count>
         <value-collection-type>SET</value-collection-type>

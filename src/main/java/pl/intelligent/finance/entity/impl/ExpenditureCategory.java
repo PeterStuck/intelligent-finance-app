@@ -63,21 +63,8 @@ public class ExpenditureCategory implements IExpenditureCategory {
     }
 
     @Override
-    public void addMatcher(IExpenditureCategoryMatcher matcher) {
-        if (matchers == null) {
-            matchers = new ArrayList<>();
-        }
-
-        var tmpMatcher = (ExpenditureCategoryMatcher) matcher;
-        tmpMatcher.setCategory(this);
-        matchers.add(tmpMatcher);
-    }
-
-    @Override
-    public List<IExpenditureCategoryMatcher> getMatchers() {
-        return matchers.stream()
-                .map(matcher -> (IExpenditureCategoryMatcher) matcher)
-                .collect(Collectors.toList());
+    public List<? extends IExpenditureCategoryMatcher> getMatchers() {
+        return matchers;
     }
 
     @Override
@@ -95,12 +82,14 @@ public class ExpenditureCategory implements IExpenditureCategory {
         this.parentCategoryId = parentCategoryId;
     }
 
-    public void setMatchers(List<ExpenditureCategoryMatcher> matchers) {
+    @Override
+    public void setMatchers(List<? extends IExpenditureCategoryMatcher> matchers) {
         if (matchers == null) {
             return;
         }
 
         this.matchers = matchers.stream()
+                .map(mat -> (ExpenditureCategoryMatcher) mat)
                 .peek(mat -> mat.setCategory(this))
                 .collect(Collectors.toList());
     }

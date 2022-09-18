@@ -26,7 +26,7 @@ public class HazelcastExpenditureCategory implements StorableExpenditureCategory
     private Integer id;
     private String name;
     private Integer parentCategoryId;
-    private List<StorableExpenditureCategoryMatcher> matchers;
+    private List<? extends StorableExpenditureCategoryMatcher> matchers;
 
     @Override
     public Integer getId() {
@@ -44,7 +44,7 @@ public class HazelcastExpenditureCategory implements StorableExpenditureCategory
     }
 
     @Override
-    public List<StorableExpenditureCategoryMatcher> getMatchers() {
+    public List<? extends StorableExpenditureCategoryMatcher> getMatchers() {
         return matchers;
     }
 
@@ -60,8 +60,12 @@ public class HazelcastExpenditureCategory implements StorableExpenditureCategory
         this.parentCategoryId = parentCategoryId;
     }
 
-    public void setMatchers(List<StorableExpenditureCategoryMatcher> matchers) {
+    public void setMatchers(List<? extends StorableExpenditureCategoryMatcher> matchers) {
         this.matchers = matchers;
+    }
+
+    public HazelcastExpenditureCategory getInstance() {
+        return this;
     }
 
     @Override

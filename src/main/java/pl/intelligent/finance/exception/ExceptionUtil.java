@@ -3,7 +3,7 @@ package pl.intelligent.finance.exception;
 public class ExceptionUtil {
 
     public static InvalidDataException dataIntegrityError() {
-        return new InvalidDataException("An exception occurred on data integrity state", InternalResultCode.DATABASE_INTEGRITY_ERROR);
+        return new InvalidDataException("An exception occurred during transaction", InternalResultCode.DATABASE_INTEGRITY_ERROR);
     }
 
     public static InvalidDataException unexpectedError(String message) {

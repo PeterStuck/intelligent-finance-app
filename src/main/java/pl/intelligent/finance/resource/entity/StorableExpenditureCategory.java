@@ -10,6 +10,6 @@ public interface StorableExpenditureCategory {
 
     Integer getParentCategoryId();
 
-    List<StorableExpenditureCategoryMatcher> getMatchers();
+    List<? extends StorableExpenditureCategoryMatcher> getMatchers();
 
 }
