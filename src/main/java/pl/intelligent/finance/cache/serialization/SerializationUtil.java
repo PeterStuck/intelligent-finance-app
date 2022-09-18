@@ -2,9 +2,13 @@ package pl.intelligent.finance.cache.serialization;
 
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
+import com.hazelcast.nio.serialization.IdentifiedDataSerializable;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 public class SerializationUtil {
 
@@ -62,6 +66,41 @@ public class SerializationUtil {
             return this;
         }
 
+        public Serializer writeObject(Object param) throws IOException {
+            if (param != null) {
+                objectDataOutput.writeBoolean(true);
+                objectDataOutput.writeObject(param);
+            } else {
+                objectDataOutput.writeBoolean(false);
+            }
+
+            return this;
+        }
+
+        public Serializer writeDataSerializable(List<IdentifiedDataSerializable> dataSerializables) throws IOException {
+            if (dataSerializables != null) {
+                objectDataOutput.writeBoolean(true);
+                objectDataOutput.writeInt(dataSerializables.size());
+                for (IdentifiedDataSerializable dataSerializable : dataSerializables) {
+                    this.writeDataSerializable(dataSerializable);
+                }
+            } else {
+                objectDataOutput.writeBoolean(false);
+            }
+
+            return this;
+        }
+
+        public Serializer writeDataSerializable(IdentifiedDataSerializable dataSerializable) throws IOException {
+            if (dataSerializable != null) {
+                objectDataOutput.writeBoolean(true);
+                dataSerializable.writeData(objectDataOutput);
+            } else {
+                objectDataOutput.writeBoolean(false);
+            }
+
+            return this;
+        }
     }
 
     public record Deserializer(ObjectDataInput objectDataInput) {
@@ -80,6 +119,31 @@ public class SerializationUtil {
 
         public Integer readInteger() throws IOException {
             return (Integer) deserializeValue(objectDataInput::readInt);
+        }
+
+        public Object readObject() throws IOException {
+            return deserializeValue(objectDataInput::readObject);
+        }
+
+        public List<IdentifiedDataSerializable> readDataSerializables(Supplier<IdentifiedDataSerializable> entityCreateCall) throws IOException {
+            if (objectDataInput.readBoolean()) {
+                int size = objectDataInput.readInt();
+                List<IdentifiedDataSerializable> entities = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
+                    entities.add(readDataSerializable(entityCreateCall.get()));
+                }
+
+                return entities;
+            }
+
+            return null;
+        }
+
+        public IdentifiedDataSerializable readDataSerializable(IdentifiedDataSerializable obj) throws IOException {
+            return (IdentifiedDataSerializable) deserializeValue(() -> {
+                obj.readData(objectDataInput);
+                return obj;
+            });
         }
 
         private Object deserializeValue(Callable<Object> callable) throws IOException {

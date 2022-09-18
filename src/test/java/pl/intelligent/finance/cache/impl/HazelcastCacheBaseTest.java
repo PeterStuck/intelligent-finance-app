@@ -1,8 +1,6 @@
 package pl.intelligent.finance.cache.impl;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.map.IMap;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.intelligent.finance.cache.config.HazelcastConfigBuilder;
@@ -43,10 +41,6 @@ public abstract class HazelcastCacheBaseTest {
             HazelcastConfigBuilder.initialize(hazelcastInstance, serviceProvider);
             HAZELCAST_INSTANCE_INITIALIZED = true;
         }
-
-        IMap<Object, Object> map = hazelcastInstance.getMap(HazelcastExpenditureRecordCache.CACHE_NAME);
-        map.evictAll();
-        map.loadAll(true);
     }
 
     public void assertExceptionOccurred(Callable callable, InvalidDataException expectedException) {

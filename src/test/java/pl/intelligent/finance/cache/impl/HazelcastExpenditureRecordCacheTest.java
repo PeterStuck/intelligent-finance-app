@@ -1,5 +1,6 @@
 package pl.intelligent.finance.cache.impl;
 
+import com.hazelcast.map.IMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,10 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheBaseTest 
         super.setUp();
 
         hzExpenditureRecordCache = new HazelcastExpenditureRecordCache(hazelcastInstance, serviceProvider);
+
+        IMap<Object, Object> map = hazelcastInstance.getMap(HazelcastExpenditureRecordCache.CACHE_NAME);
+        map.evictAll();
+        map.loadAll(true);
     }
 
     @Test

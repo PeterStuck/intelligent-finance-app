@@ -2,7 +2,9 @@ package pl.intelligent.finance.cache.serialization;
 
 public enum CacheEntityType {
 
-    EXPENDITURE_RECORD_TYPE(1);
+    EXPENDITURE_RECORD_TYPE(1),
+    EXPENDITURE_CATEGORY_TYPE(2),
+    EXPENDITURE_CATEGORY_MATCHER_TYPE(3);
 
     private int typeId;
 

@@ -3,6 +3,7 @@ package pl.intelligent.finance.cache.serialization;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,11 @@ public class HazelcastExpenditureRecordSerializationTest {
     @BeforeEach
     public void setUp() {
         map.evict(1L);
+    }
+
+    @AfterAll
+    public static void tearDownClass() {
+        hazelcastInstance.shutdown();
     }
 
     @Test
