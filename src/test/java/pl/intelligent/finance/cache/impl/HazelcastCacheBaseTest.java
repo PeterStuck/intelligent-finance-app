@@ -1,18 +1,24 @@
 package pl.intelligent.finance.cache.impl;
 
 import com.hazelcast.core.HazelcastInstance;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.intelligent.finance.cache.config.HazelcastConfigBuilder;
 import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.service.ServiceProvider;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class HazelcastCacheBaseTest {
+
+    private static Logger logger = LoggerFactory.getLogger(HazelcastCacheBaseTest.class);
 
     @Autowired
     protected HazelcastInstance hazelcastInstance;
@@ -40,6 +46,18 @@ public abstract class HazelcastCacheBaseTest {
     protected static String STORED_RECORD_NAME4 = "record4";
 
     private boolean HAZELCAST_INSTANCE_INITIALIZED = false;
+
+    @AfterAll
+    public static void tearDownClass() {
+        try {
+            File file = new File("./target/if.log");
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (Exception e) {
+            logger.error("Error occurred during test class initialization", e);
+        }
+    }
 
     @BeforeEach
     public void setUp() {

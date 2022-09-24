@@ -34,11 +34,15 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
 
     @Override
     public StorableExpenditureRecord get(Long id) {
-        return expenditureRecordMap.get(id);
+        logger().debug("Get Expenditure Record by id: {}", id);
+        HazelcastExpenditureRecord record = expenditureRecordMap.get(id);
+        logger().info("Get Expenditure Record by id, found: {}", record);
+        return record;
     }
 
     @Override
     public StorableExpenditureRecord add(StorableExpenditureRecord expenditureRecord) throws InvalidDataException {
+        logger().info("Add expenditure record: {} to cache", expenditureRecord);
         var result = attemptOperation(() -> addToService(expenditureRecord));
 
         if (result.isError()) {
@@ -64,6 +68,7 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
 
     @Override
     public List<StorableExpenditureRecord> batchAdd(List<StorableExpenditureRecord> expenditureRecords) throws InvalidDataException {
+        logger().info("Batch Add expenditure records: {} to cache", expenditureRecords);
         var result = attemptBatchOperation(() -> batchAddToService(expenditureRecords));
 
         if (result.isError()) {
@@ -95,15 +100,19 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
     }
 
     private void setOnCache(HazelcastExpenditureRecord expenditureRecord) {
+        logger().debug("Setting exenditure record on cache: {}", expenditureRecord);
         expenditureRecordMap.set(expenditureRecord.getId(), expenditureRecord);
     }
 
     @Override
     public List<StorableExpenditureRecord> getAllByBankStatementId(String bankStatementId) {
+        logger().debug("Get All expenditure records by bankStatementId: {} from cache", bankStatementId);
         PredicateBuilder.EntryObject entryObject = Predicates.newPredicateBuilder().getEntryObject();
         Predicate predicate = entryObject.get("bankStatementId").equal(bankStatementId);
 
-        return expenditureRecordMap.values(predicate).stream().toList();
+        List resultList = expenditureRecordMap.values(predicate).stream().toList();
+        logger().info("Get All expenditure records by bankStatementId: {}, found: {}", bankStatementId, resultList.size());
+        return resultList;
     }
 
     @Override

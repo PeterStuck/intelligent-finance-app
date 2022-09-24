@@ -1,5 +1,6 @@
 package pl.intelligent.finance.cache.util;
 
+import org.slf4j.Logger;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategory;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategoryMatcher;
 import pl.intelligent.finance.exception.ExceptionUtil;
@@ -14,16 +15,17 @@ import java.util.stream.Collectors;
 
 public class ExpenditureCategoryMatcherUtil {
 
-    public static HazelcastExpenditureCategoryMatcherManager hzMatcherManager(StorableExpenditureCategory category) {
-        return new HazelcastExpenditureCategoryMatcherManager(category);
+    public static HazelcastExpenditureCategoryMatcherManager hzMatcherManager(StorableExpenditureCategory category, Logger logger) {
+        return new HazelcastExpenditureCategoryMatcherManager(category, logger);
     }
 
     public static class HazelcastExpenditureCategoryMatcherManager {
 
         private HazelcastExpenditureCategory category;
         private List<HazelcastExpenditureCategoryMatcher> matchers;
+        private Logger logger;
 
-        protected HazelcastExpenditureCategoryMatcherManager(StorableExpenditureCategory category) {
+        protected HazelcastExpenditureCategoryMatcherManager(StorableExpenditureCategory category, Logger logger) {
             this.category = (HazelcastExpenditureCategory) category;
             this.matchers = Optional.ofNullable(category.getMatchers())
                     .map(matchers -> matchers.stream()
@@ -32,10 +34,12 @@ public class ExpenditureCategoryMatcherUtil {
                     .orElse(new ArrayList<>());
 
             this.category.setMatchers(matchers);
+            this.logger = logger;
         }
 
         public void addMatcher(StorableExpenditureCategoryMatcher matcher) {
             matchers.add((HazelcastExpenditureCategoryMatcher) matcher);
+            logger.debug("ExpenditureCategoryMatcherManager added matcher: {} to category: {}", matcher, category);
         }
 
         public StorableExpenditureCategoryMatcher detachMatcher(int id) throws InvalidDataException {
@@ -43,11 +47,14 @@ public class ExpenditureCategoryMatcherUtil {
                     .filter(m -> m.getId().equals(id))
                     .findFirst().orElse(null);
 
+            logger.debug("ExpenditureCategoryMatcherManager detach matcher: {} from category: {}", matcher, category);
+
             if (matcher == null) {
                 throw ExceptionUtil.expenditureCategoryMatcherNotFound(category.getName(), id);
             }
 
             matchers.remove(matcher);
+            logger.debug("ExpenditureCategoryMatcherManager matcher: {} from category: {} detached", matcher, category);
 
             return matcher;
         }
@@ -57,11 +64,14 @@ public class ExpenditureCategoryMatcherUtil {
                     .filter(m -> m.getPattern().equals(pattern))
                     .findFirst().orElse(null);
 
+            logger.debug("ExpenditureCategoryMatcherManager detach matcher by pattern: {} from category: {}", matcher, category);
+
             if (matcher == null) {
                 throw ExceptionUtil.expenditureCategoryMatcherNotFound(category.getName(), pattern);
             }
 
             matchers.remove(matcher);
+            logger.debug("ExpenditureCategoryMatcherManager matcher: {} from category: {} detached", matcher, category);
 
             return matcher;
         }
@@ -70,6 +80,7 @@ public class ExpenditureCategoryMatcherUtil {
             List<StorableExpenditureCategoryMatcher> matchersBefore = new ArrayList<>(matchers);
 
             matchers.clear();
+            logger.debug("ExpenditureCategoryMatcherManager all matchers from category: {} has been detached", category);
 
             return matchersBefore;
         }

@@ -56,6 +56,7 @@ public class HazelcastExpenditureCategoryCache extends HazelcastCacheBase<Hazelc
 
     @Override
     public StorableExpenditureCategory add(StorableExpenditureCategory category) throws InvalidDataException {
+        logger().info("Add expenditure category to cache: {}", category);
         var result = attemptOperation(() -> addToService(category));
 
         if (result.isError()) {
@@ -81,9 +82,11 @@ public class HazelcastExpenditureCategoryCache extends HazelcastCacheBase<Hazelc
 
     @Override
     public boolean attachMatcher(final String categoryName, StorableExpenditureCategoryMatcher matcher) throws InvalidDataException {
+        logger().info("Attach matcher: {} to expenditure category: {} on cache", matcher, categoryName);
         var storedCategory = getByName(categoryName);
+        logger().debug("Attach matcher: {}, found category: {}", matcher, storedCategory);
 
-        hzMatcherManager(storedCategory).addMatcher(matcher);
+        hzMatcherManager(storedCategory, logger()).addMatcher(matcher);
 
         var result = attemptOperation(() -> updateCategoryOnService(storedCategory));
 
@@ -108,9 +111,11 @@ public class HazelcastExpenditureCategoryCache extends HazelcastCacheBase<Hazelc
 
     @Override
     public boolean detachMatcher(String categoryName, int matcherId) throws InvalidDataException {
+        logger().info("Detach matcher: {} from expenditure category: {} on cache", matcherId, categoryName);
         var storedCategory = getByName(categoryName);
+        logger().debug("Detach matcher: {}, found category: {}", matcherId, storedCategory);
 
-        var matcherToDelete = hzMatcherManager(storedCategory).detachMatcher(matcherId);
+        var matcherToDelete = hzMatcherManager(storedCategory, logger()).detachMatcher(matcherId);
 
         var result = attemptOperation(() -> removeCategoryMatcherOnService(storedCategory, matcherToDelete));
 
@@ -125,9 +130,11 @@ public class HazelcastExpenditureCategoryCache extends HazelcastCacheBase<Hazelc
 
     @Override
     public boolean detachMatcherByPattern(String categoryName, String pattern) throws InvalidDataException {
+        logger().info("Detach matcher by patten: {} from expenditure category: {} on cache", pattern, categoryName);
         var storedCategory = getByName(categoryName);
+        logger().debug("Detach matcher by pattern: {}, found category: {}", pattern, storedCategory);
 
-        var matcherToDelete = hzMatcherManager(storedCategory).detachMatcherByPattern(pattern);
+        var matcherToDelete = hzMatcherManager(storedCategory, logger()).detachMatcherByPattern(pattern);
 
         var result = attemptOperation(() -> removeCategoryMatcherOnService(storedCategory, matcherToDelete));
 
@@ -149,9 +156,11 @@ public class HazelcastExpenditureCategoryCache extends HazelcastCacheBase<Hazelc
 
     @Override
     public boolean detachAllMatchers(String categoryName) throws InvalidDataException {
+        logger().info("Detach all matchers from expenditure category: {} on cache", categoryName);
         var storedCategory = getByName(categoryName);
+        logger().debug("Detach all matchers, found category: {}", storedCategory);
 
-        var matchersToDelete = hzMatcherManager(storedCategory).detachAllMatchers();
+        var matchersToDelete = hzMatcherManager(storedCategory, logger()).detachAllMatchers();
 
         var result = attemptOperation(() -> removeCategoryMatchersOnService(storedCategory, matchersToDelete));
 
@@ -174,6 +183,7 @@ public class HazelcastExpenditureCategoryCache extends HazelcastCacheBase<Hazelc
     }
 
     private void setOnCache(StorableExpenditureCategory expenditureCategory) {
+        logger().debug("Setting expenditure category on cache: {}", expenditureCategory);
         expenditureCategoryMap.set(expenditureCategory.getId(), (HazelcastExpenditureCategory) expenditureCategory);
     }
 

@@ -6,7 +6,6 @@ import com.hazelcast.nio.serialization.IdentifiedDataSerializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import pl.intelligent.finance.cache.serialization.CacheEntitySerializableFactory;
 import pl.intelligent.finance.cache.serialization.CacheEntityType;
 import pl.intelligent.finance.cache.serialization.SerializationUtil;
@@ -15,7 +14,6 @@ import pl.intelligent.finance.resource.entity.StorableExpenditureRecord;
 import java.io.IOException;
 import java.util.Objects;
 
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -117,4 +115,14 @@ public class HazelcastExpenditureRecord implements StorableExpenditureRecord, Id
         bankStatementId = deserializer.readString();
     }
 
+    @Override
+    public String toString() {
+        return "HazelcastExpenditureRecord{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", amount=" + amount +
+                ", categoryId=" + categoryId +
+                ", bankStatementId='" + bankStatementId + '\'' +
+                '}';
+    }
 }
