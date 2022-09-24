@@ -1,4 +1,4 @@
-package pl.intelligent.finance.cache.validator;
+package pl.intelligent.finance.cache.validation;
 
 import pl.intelligent.finance.cache.ExpenditureCategoryStore;
 import pl.intelligent.finance.exception.InvalidDataException;
@@ -7,11 +7,11 @@ import pl.intelligent.finance.resource.entity.StorableExpenditureCategoryMatcher
 
 import java.util.List;
 
-public class ExpenditureCategoryValidator implements ExpenditureCategoryStore {
+public class ExpenditureCategoryStoreWithValidation implements ExpenditureCategoryStore {
 
     private ExpenditureCategoryStore store;
 
-    public ExpenditureCategoryValidator(ExpenditureCategoryStore store) {
+    public ExpenditureCategoryStoreWithValidation(ExpenditureCategoryStore store) {
         this.store = store;
     }
 
