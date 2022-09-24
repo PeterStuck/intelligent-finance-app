@@ -3,12 +3,12 @@ package pl.intelligent.finance.cache.impl;
 import org.springframework.dao.DataAccessException;
 import pl.intelligent.finance.exception.ExceptionUtil;
 import pl.intelligent.finance.exception.InvalidDataException;
-import pl.intelligent.finance.service.provider.ServiceProvider;
+import pl.intelligent.finance.service.ServiceProvider;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public abstract class HazelcastCacheBase<T> {
+public abstract class HazelcastCacheBase<T, E> {
 
     protected static final String CACHE_NAME_PREFIX = "if-";
 
@@ -67,5 +67,9 @@ public abstract class HazelcastCacheBase<T> {
             return exception != null;
         }
     }
+
+    protected abstract T getConvertedCacheEntity(E entity);
+
+    protected abstract E getConvertedDbEntity(T entity);
 
 }

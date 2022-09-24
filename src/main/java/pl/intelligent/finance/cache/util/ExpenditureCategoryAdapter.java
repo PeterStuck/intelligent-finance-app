@@ -30,7 +30,7 @@ public class ExpenditureCategoryAdapter {
                 .build();
     }
 
-    private static List<? extends StorableExpenditureCategoryMatcher> createExpenditureCategoryMatchers(List<? extends IExpenditureCategoryMatcher> matchersDb) {
+    private static List<HazelcastExpenditureCategoryMatcher> createExpenditureCategoryMatchers(List<? extends IExpenditureCategoryMatcher> matchersDb) {
         if (matchersDb == null || matchersDb.isEmpty()) {
             return Collections.emptyList();
         }
@@ -77,7 +77,7 @@ public class ExpenditureCategoryAdapter {
                 .collect(Collectors.toList());
     }
 
-    private static IExpenditureCategoryMatcher createExpenditureCategoryMatcher(IExpenditureCategoryMatcherService matcherService,
+    public static IExpenditureCategoryMatcher createExpenditureCategoryMatcher(IExpenditureCategoryMatcherService matcherService,
                                                                                 StorableExpenditureCategoryMatcher storedMatcher) {
         var matcherDb = matcherService.createInstance();
         matcherDb.setId(storedMatcher.getId());

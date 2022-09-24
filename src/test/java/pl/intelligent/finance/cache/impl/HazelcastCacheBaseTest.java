@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.intelligent.finance.cache.config.HazelcastConfigBuilder;
 import pl.intelligent.finance.exception.InvalidDataException;
-import pl.intelligent.finance.service.provider.ServiceProvider;
+import pl.intelligent.finance.service.ServiceProvider;
 
 import java.util.concurrent.Callable;
 
@@ -30,6 +30,7 @@ public abstract class HazelcastCacheBaseTest {
     protected static String STORED_EXPENDITURE_CATEGORY = "category1";
     protected static String STORED_EXPENDITURE_CATEGORY2 = "category2";
     protected static String STORED_EXPENDITURE_CATEGORY3 = "category3";
+    protected static String NOT_EXISTING_EXPENDITURE_CATEGORY = "not_existing_category";
     protected static Integer NOT_EXISTING_EXPENDITURE_CATEGORY_ID = 99;
 
     protected static String NOT_EXISTING_RECORD_NAME = "not_existing_record";

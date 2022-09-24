@@ -42,6 +42,11 @@ public class ExpenditureCategoryServiceDb extends ServiceBase<IExpenditureCatego
     }
 
     @Override
+    public IExpenditureCategory update(IExpenditureCategory category) throws Exception {
+        return withException(() -> repository.saveAndFlush((ExpenditureCategory) category));
+    }
+
+    @Override
     public void delete(IExpenditureCategory category) {
         repository.delete((ExpenditureCategory) category);
     }

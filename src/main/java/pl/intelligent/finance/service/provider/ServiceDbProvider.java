@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import pl.intelligent.finance.service.IExpenditureCategoryMatcherService;
 import pl.intelligent.finance.service.IExpenditureCategoryService;
 import pl.intelligent.finance.service.IExpenditureRecordService;
+import pl.intelligent.finance.service.ServiceProvider;
 
 @Component
 public class ServiceDbProvider implements ServiceProvider {

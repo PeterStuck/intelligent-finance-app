@@ -37,7 +37,7 @@ public class ExpenditureCategory implements IExpenditureCategory {
 
     @OneToMany(mappedBy = "category",
             fetch = FetchType.EAGER,
-            cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+            cascade = CascadeType.ALL)
     private List<ExpenditureCategoryMatcher> matchers;
 
     public ExpenditureCategory(Integer id, String name, Integer parentCategoryId, List<ExpenditureCategoryMatcher> matchers) {

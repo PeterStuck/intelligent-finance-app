@@ -7,7 +7,7 @@ import pl.intelligent.finance.cache.impl.HazelcastExpenditureCategoryCache;
 import pl.intelligent.finance.cache.impl.HazelcastExpenditureRecordCache;
 import pl.intelligent.finance.cache.loader.ExpenditureCategoryMapLoader;
 import pl.intelligent.finance.cache.loader.ExpenditureRecordMapLoader;
-import pl.intelligent.finance.service.provider.ServiceProvider;
+import pl.intelligent.finance.service.ServiceProvider;
 
 public class HazelcastConfigBuilder {
 

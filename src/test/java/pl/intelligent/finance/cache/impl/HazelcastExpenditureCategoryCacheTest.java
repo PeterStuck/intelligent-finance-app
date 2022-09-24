@@ -8,6 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategory;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategoryMatcher;
 import pl.intelligent.finance.entity.IExpenditureCategory;
+import pl.intelligent.finance.exception.ExceptionUtil;
 import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.resource.entity.ExpenditureCategoryMatcherType;
 import pl.intelligent.finance.resource.entity.StorableExpenditureCategory;
@@ -44,9 +45,9 @@ public class HazelcastExpenditureCategoryCacheTest extends HazelcastCacheBaseTes
         StorableExpenditureCategory cat = getByName(allCategories, STORED_EXPENDITURE_CATEGORY);
         assertNotNull(cat);
 
-        var expectedMatcher = createMatcher(1, "^test$", ExpenditureCategoryMatcherType.REGEX);
-        var expectedMatcher2 = createMatcher(2, "^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
-        var expectedMatcher3 = createMatcher(3, "^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
+        var expectedMatcher = (HazelcastExpenditureCategoryMatcher) createMatcher(1, "^test$", ExpenditureCategoryMatcherType.REGEX);
+        var expectedMatcher2 = (HazelcastExpenditureCategoryMatcher) createMatcher(2, "^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
+        var expectedMatcher3 = (HazelcastExpenditureCategoryMatcher) createMatcher(3, "^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
         var expectedCat = createCategory(STORED_EXPENDITURE_CATEGORY_ID, STORED_EXPENDITURE_CATEGORY,
                 null, Arrays.asList(expectedMatcher, expectedMatcher2, expectedMatcher3));
         assertEquals(expectedCat, cat);
@@ -71,9 +72,9 @@ public class HazelcastExpenditureCategoryCacheTest extends HazelcastCacheBaseTes
         StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
         assertNotNull(category);
 
-        var expectedMatcher = createMatcher(1, "^test$", ExpenditureCategoryMatcherType.REGEX);
-        var expectedMatcher2 = createMatcher(2, "^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
-        var expectedMatcher3 = createMatcher(3, "^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
+        var expectedMatcher = (HazelcastExpenditureCategoryMatcher) createMatcher(1, "^test$", ExpenditureCategoryMatcherType.REGEX);
+        var expectedMatcher2 = (HazelcastExpenditureCategoryMatcher) createMatcher(2, "^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
+        var expectedMatcher3 = (HazelcastExpenditureCategoryMatcher) createMatcher(3, "^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
         var expectedCat = createCategory(STORED_EXPENDITURE_CATEGORY_ID, STORED_EXPENDITURE_CATEGORY,
                 null, Arrays.asList(expectedMatcher, expectedMatcher2, expectedMatcher3));
         assertEquals(expectedCat, category);
@@ -128,9 +129,9 @@ public class HazelcastExpenditureCategoryCacheTest extends HazelcastCacheBaseTes
         StorableExpenditureCategory category = hzExpCategoryCache.getByName(name);
         assertNull(category);
 
-        var matcher = createMatcher("^test$", ExpenditureCategoryMatcherType.REGEX);
-        var matcher2 = createMatcher("^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
-        var matcher3 = createMatcher("^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
+        var matcher = (HazelcastExpenditureCategoryMatcher) createMatcher("^test$", ExpenditureCategoryMatcherType.REGEX);
+        var matcher2 = (HazelcastExpenditureCategoryMatcher) createMatcher("^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
+        var matcher3 = (HazelcastExpenditureCategoryMatcher) createMatcher("^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
         var categoryToCreate = (HazelcastExpenditureCategory) createCategory(name,null,
                 Arrays.asList(matcher, matcher2, matcher3));
         StorableExpenditureCategory persistedCategory = hzExpCategoryCache.add(categoryToCreate);
@@ -148,6 +149,182 @@ public class HazelcastExpenditureCategoryCacheTest extends HazelcastCacheBaseTes
         IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(name);
         assertNotNull(categoryDb);
         assertCacheEntityWithDbEntity(storedCategory, categoryDb);
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void addWithExistingCategoryNameTest() throws InvalidDataException {
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY2);
+        assertNotNull(category);
+
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY2);
+        assertNotNull(categoryDb);
+
+        var matcher = (HazelcastExpenditureCategoryMatcher) createMatcher("^test$", ExpenditureCategoryMatcherType.REGEX);
+        var matcher2 = (HazelcastExpenditureCategoryMatcher) createMatcher("^test[0-9]*", ExpenditureCategoryMatcherType.REGEX);
+        var matcher3 = (HazelcastExpenditureCategoryMatcher) createMatcher("^[A-Za-z]{1,}", ExpenditureCategoryMatcherType.REGEX);
+        var categoryToCreate = (HazelcastExpenditureCategory) createCategory(STORED_EXPENDITURE_CATEGORY2,null,
+                Arrays.asList(matcher, matcher2, matcher3));
+
+        assertExceptionOccurred(
+                () -> hzExpCategoryCache.add(categoryToCreate),
+                ExceptionUtil.dataIntegrityError()
+        );
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void attachMatcherTest() throws InvalidDataException {
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY3);
+        assertNotNull(categoryDb);
+        assertEquals(0, categoryDb.getMatchers().size());
+
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY3);
+        assertNotNull(category);
+        assertEquals(0, category.getMatchers().size());
+
+        var newMatcher = (HazelcastExpenditureCategoryMatcher) createMatcher("test123", ExpenditureCategoryMatcherType.NORMAL);
+        hzExpCategoryCache.attachMatcher(STORED_EXPENDITURE_CATEGORY3, newMatcher);
+
+        category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY3);
+        assertNotNull(category);
+        assertEquals(1, category.getMatchers().size());
+
+        StorableExpenditureCategoryMatcher storedMatcher = category.getMatchers().get(0);
+        newMatcher.setId(storedMatcher.getId());
+        assertEquals(newMatcher, storedMatcher);
+
+        categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY3);
+        assertNotNull(categoryDb);
+        assertEquals(1, categoryDb.getMatchers().size());
+        assertCacheEntityWithDbEntity(category, categoryDb);
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void detachMatcherTest() throws InvalidDataException {
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+
+        hzExpCategoryCache.detachMatcher(STORED_EXPENDITURE_CATEGORY, 1);
+
+        category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(2, category.getMatchers().size());
+        assertFalse(category.getMatchers().stream().anyMatch(m -> m.getId().equals(1)));
+
+        categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(2, categoryDb.getMatchers().size());
+        assertCacheEntityWithDbEntity(category, categoryDb);
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void detachMatcherNotFoundTest() throws InvalidDataException {
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+
+        assertExceptionOccurred(
+                () -> hzExpCategoryCache.detachMatcher(STORED_EXPENDITURE_CATEGORY, 99),
+                ExceptionUtil.expenditureCategoryMatcherNotFound(STORED_EXPENDITURE_CATEGORY, 99)
+        );
+
+        category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+        assertTrue(category.getMatchers().stream().anyMatch(m -> m.getId().equals(1)));
+
+        categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+        assertCacheEntityWithDbEntity(category, categoryDb);
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void detachMatcherByPatternTest() throws InvalidDataException {
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+
+        var pattern = "^test$";
+        hzExpCategoryCache.detachMatcherByPattern(STORED_EXPENDITURE_CATEGORY, pattern);
+
+        category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(2, category.getMatchers().size());
+        assertFalse(category.getMatchers().stream().anyMatch(m -> m.getPattern().equals(pattern)));
+
+        categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(2, categoryDb.getMatchers().size());
+        assertCacheEntityWithDbEntity(category, categoryDb);
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void detachMatcherByPatternNotFoundTest() throws InvalidDataException {
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+
+        var pattern = "123.{1,3}--";
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+        assertFalse(category.getMatchers().stream().anyMatch(m -> m.getPattern().equals(pattern)));
+
+        assertExceptionOccurred(
+                () -> hzExpCategoryCache.detachMatcherByPattern(STORED_EXPENDITURE_CATEGORY, pattern),
+                ExceptionUtil.expenditureCategoryMatcherNotFound(STORED_EXPENDITURE_CATEGORY, pattern)
+        );
+
+        category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+
+        categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+        assertCacheEntityWithDbEntity(category, categoryDb);
+    }
+
+    @Test
+    @Sql(scripts={"/sql/02_create_tables.sql", "/data/test_cache_data.sql"})
+    public void detachAllMatchersTest() throws InvalidDataException {
+        IExpenditureCategory categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(3, categoryDb.getMatchers().size());
+
+        StorableExpenditureCategory category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(3, category.getMatchers().size());
+
+        hzExpCategoryCache.detachAllMatchers(STORED_EXPENDITURE_CATEGORY);
+
+        category = hzExpCategoryCache.getByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(category);
+        assertEquals(0, category.getMatchers().size());
+
+        categoryDb = serviceProvider.getExpenditureCategoryService().findByName(STORED_EXPENDITURE_CATEGORY);
+        assertNotNull(categoryDb);
+        assertEquals(0, categoryDb.getMatchers().size());
+        assertCacheEntityWithDbEntity(category, categoryDb);
     }
 
     private void assertCacheEntityWithDbEntity(StorableExpenditureCategory storedCategory, IExpenditureCategory categoryDb) {
@@ -182,13 +359,13 @@ public class HazelcastExpenditureCategoryCacheTest extends HazelcastCacheBaseTes
 
     private StorableExpenditureCategory createCategory(String name,
                                                        Integer parentCategoryId,
-                                                       List<StorableExpenditureCategoryMatcher> matchers) {
+                                                       List<HazelcastExpenditureCategoryMatcher> matchers) {
         return createCategory(null, name, parentCategoryId, matchers);
     }
 
     private StorableExpenditureCategory createCategory(Integer id, String name,
                                                        Integer parentCategoryId,
-                                                       List<? extends StorableExpenditureCategoryMatcher> matchers) {
+                                                       List<HazelcastExpenditureCategoryMatcher> matchers) {
         return new HazelcastExpenditureCategory(id, name, parentCategoryId, matchers);
     }
 

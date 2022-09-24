@@ -26,7 +26,7 @@ public class HazelcastExpenditureCategory implements StorableExpenditureCategory
     private Integer id;
     private String name;
     private Integer parentCategoryId;
-    private List<? extends StorableExpenditureCategoryMatcher> matchers;
+    private List<HazelcastExpenditureCategoryMatcher> matchers;
 
     @Override
     public Integer getId() {
@@ -60,7 +60,7 @@ public class HazelcastExpenditureCategory implements StorableExpenditureCategory
         this.parentCategoryId = parentCategoryId;
     }
 
-    public void setMatchers(List<? extends StorableExpenditureCategoryMatcher> matchers) {
+    public void setMatchers(List<HazelcastExpenditureCategoryMatcher> matchers) {
         this.matchers = matchers;
     }
 
@@ -100,7 +100,7 @@ public class HazelcastExpenditureCategory implements StorableExpenditureCategory
         parentCategoryId = deserializer.readInteger();
         matchers = Optional.ofNullable(deserializer.readDataSerializables(HazelcastExpenditureCategoryMatcher::new))
                         .map(m -> m.stream()
-                                .map(matcher -> (StorableExpenditureCategoryMatcher) matcher)
+                                .map(matcher -> (HazelcastExpenditureCategoryMatcher) matcher)
                                 .collect(Collectors.toList()))
                         .orElse(null);
     }

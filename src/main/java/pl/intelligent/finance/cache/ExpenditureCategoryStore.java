@@ -14,12 +14,12 @@ public interface ExpenditureCategoryStore {
 
     StorableExpenditureCategory add(StorableExpenditureCategory category) throws InvalidDataException;
 
-    void attachMatcher(StorableExpenditureCategoryMatcher matcher);
+    boolean attachMatcher(String categoryName, StorableExpenditureCategoryMatcher matcher) throws InvalidDataException;
 
-    void detachMatcher(int id);
+    boolean detachMatcher(String categoryName, int matcherId) throws InvalidDataException;
 
-    void detachMatcherByPattern(String pattern);
+    boolean detachMatcherByPattern(String categoryName, String pattern) throws InvalidDataException;
 
-    void detachAllMatchers();
+    boolean detachAllMatchers(String categoryName) throws InvalidDataException;
 
 }

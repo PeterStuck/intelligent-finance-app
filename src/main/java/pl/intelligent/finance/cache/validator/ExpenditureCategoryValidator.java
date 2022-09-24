@@ -31,22 +31,22 @@ public class ExpenditureCategoryValidator implements ExpenditureCategoryStore {
     }
 
     @Override
-    public void attachMatcher(StorableExpenditureCategoryMatcher matcher) {
-        store.attachMatcher(matcher);
+    public boolean attachMatcher(String categoryName, StorableExpenditureCategoryMatcher matcher) throws InvalidDataException {
+        return store.attachMatcher(null, matcher);
     }
 
     @Override
-    public void detachMatcher(int id) {
-        store.detachMatcher(id);
+    public boolean detachMatcher(String categoryName, int matcherId) throws InvalidDataException {
+        return store.detachMatcher(null, matcherId);
     }
 
     @Override
-    public void detachMatcherByPattern(String pattern) {
-        store.detachMatcherByPattern(pattern);
+    public boolean detachMatcherByPattern(String categoryName, String pattern) throws InvalidDataException {
+        return store.detachMatcherByPattern(null, pattern);
     }
 
     @Override
-    public void detachAllMatchers() {
-        store.detachAllMatchers();
+    public boolean detachAllMatchers(String categoryName) throws InvalidDataException {
+        return store.detachAllMatchers(null);
     }
 }

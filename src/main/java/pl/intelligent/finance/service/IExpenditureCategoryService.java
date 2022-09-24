@@ -17,6 +17,8 @@ public interface IExpenditureCategoryService {
 
     IExpenditureCategory create(IExpenditureCategory category) throws Exception;
 
+    IExpenditureCategory update(IExpenditureCategory category) throws Exception;
+
     void delete(IExpenditureCategory category);
 
     void deleteById(Integer id);

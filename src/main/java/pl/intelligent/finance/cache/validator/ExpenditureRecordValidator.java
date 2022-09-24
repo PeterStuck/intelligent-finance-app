@@ -1,7 +1,6 @@
 package pl.intelligent.finance.cache.validator;
 
 import pl.intelligent.finance.cache.ExpenditureRecordStore;
-import pl.intelligent.finance.cache.ExpenditureRecordStoreWithService;
 import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.resource.entity.StorableExpenditureRecord;
 
@@ -9,9 +8,9 @@ import java.util.List;
 
 public class ExpenditureRecordValidator implements ExpenditureRecordStore {
 
-    private ExpenditureRecordStoreWithService recordStore;
+    private ExpenditureRecordStore recordStore;
 
-    public ExpenditureRecordValidator(ExpenditureRecordStoreWithService recordStore) {
+    public ExpenditureRecordValidator(ExpenditureRecordStore recordStore) {
         this.recordStore = recordStore;
     }
 
