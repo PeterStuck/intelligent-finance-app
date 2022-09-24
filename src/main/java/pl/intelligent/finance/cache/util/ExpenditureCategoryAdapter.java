@@ -2,8 +2,8 @@ package pl.intelligent.finance.cache.util;
 
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategory;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategoryMatcher;
-import pl.intelligent.finance.entity.IExpenditureCategory;
-import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategoryMatcher;
 import pl.intelligent.finance.resource.entity.ExpenditureCategoryMatcherType;
 import pl.intelligent.finance.resource.entity.StorableExpenditureCategory;
 import pl.intelligent.finance.resource.entity.StorableExpenditureCategoryMatcher;
@@ -82,7 +82,7 @@ public class ExpenditureCategoryAdapter {
         var matcherDb = matcherService.createInstance();
         matcherDb.setId(storedMatcher.getId());
         matcherDb.setPattern(storedMatcher.getPattern());
-        matcherDb.setMatcherType(pl.intelligent.finance.entity.ExpenditureCategoryMatcherType.valueOf(storedMatcher.getMatcherType().getId()));
+        matcherDb.setMatcherType(pl.intelligent.finance.persistence.entity.ExpenditureCategoryMatcherType.valueOf(storedMatcher.getMatcherType().getId()));
         return matcherDb;
     }
 

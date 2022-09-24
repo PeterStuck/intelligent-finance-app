@@ -1,8 +1,8 @@
-package pl.intelligent.finance.repository;
+package pl.intelligent.finance.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import pl.intelligent.finance.entity.impl.ExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.impl.ExpenditureRecord;
 
 import java.util.List;
 

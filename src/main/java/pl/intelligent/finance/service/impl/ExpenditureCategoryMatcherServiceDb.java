@@ -3,12 +3,12 @@ package pl.intelligent.finance.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.intelligent.finance.entity.IExpenditureCategory;
-import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
-import pl.intelligent.finance.entity.impl.ExpenditureCategory;
-import pl.intelligent.finance.entity.impl.ExpenditureCategoryMatcher;
-import pl.intelligent.finance.repository.ExpenditureCategoryMatcherRepository;
-import pl.intelligent.finance.repository.ExpenditureCategoryRepository;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategoryMatcher;
+import pl.intelligent.finance.persistence.entity.impl.ExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.impl.ExpenditureCategoryMatcher;
+import pl.intelligent.finance.persistence.repository.ExpenditureCategoryMatcherRepository;
+import pl.intelligent.finance.persistence.repository.ExpenditureCategoryRepository;
 import pl.intelligent.finance.service.IExpenditureCategoryMatcherService;
 
 import java.util.List;

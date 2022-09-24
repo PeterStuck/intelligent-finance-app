@@ -1,7 +1,7 @@
 package pl.intelligent.finance.service;
 
-import pl.intelligent.finance.entity.IExpenditureCategory;
-import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategoryMatcher;
 
 import java.util.List;
 

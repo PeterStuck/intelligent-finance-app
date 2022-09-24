@@ -8,8 +8,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
-import pl.intelligent.finance.entity.IExpenditureRecord;
-import pl.intelligent.finance.entity.impl.ExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.IExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.impl.ExpenditureRecord;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 
 import java.util.Arrays;

@@ -1,7 +1,7 @@
 package pl.intelligent.finance.cache.util;
 
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureRecord;
-import pl.intelligent.finance.entity.IExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.IExpenditureRecord;
 import pl.intelligent.finance.resource.entity.StorableExpenditureRecord;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 

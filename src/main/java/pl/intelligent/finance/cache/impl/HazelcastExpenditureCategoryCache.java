@@ -7,7 +7,7 @@ import com.hazelcast.query.PredicateBuilder;
 import com.hazelcast.query.Predicates;
 import pl.intelligent.finance.cache.ExpenditureCategoryStore;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategory;
-import pl.intelligent.finance.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
 import pl.intelligent.finance.exception.ExceptionUtil;
 import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.resource.entity.StorableExpenditureCategory;

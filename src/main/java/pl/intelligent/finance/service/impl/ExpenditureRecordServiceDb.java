@@ -3,9 +3,9 @@ package pl.intelligent.finance.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.intelligent.finance.entity.IExpenditureRecord;
-import pl.intelligent.finance.entity.impl.ExpenditureRecord;
-import pl.intelligent.finance.repository.ExpenditureRecordRepository;
+import pl.intelligent.finance.persistence.entity.IExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.impl.ExpenditureRecord;
+import pl.intelligent.finance.persistence.repository.ExpenditureRecordRepository;
 import pl.intelligent.finance.service.IExpenditureRecordService;
 
 import java.util.Collection;

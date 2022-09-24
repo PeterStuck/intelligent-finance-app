@@ -1,4 +1,4 @@
-package pl.intelligent.finance.entity;
+package pl.intelligent.finance.persistence.entity;
 
 public interface IExpenditureRecord {
 

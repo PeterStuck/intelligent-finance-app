@@ -1,12 +1,11 @@
-package pl.intelligent.finance.entity.impl;
+package pl.intelligent.finance.persistence.entity.impl;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pl.intelligent.finance.entity.IExpenditureCategory;
-import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategoryMatcher;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package pl.intelligent.finance.repository;
+package pl.intelligent.finance.persistence.repository;
 
 import org.springframework.test.context.jdbc.Sql;
 

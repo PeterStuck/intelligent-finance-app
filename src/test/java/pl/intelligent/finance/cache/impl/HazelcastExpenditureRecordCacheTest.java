@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureRecord;
-import pl.intelligent.finance.entity.IExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.IExpenditureRecord;
 import pl.intelligent.finance.exception.ExceptionUtil;
 import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.resource.entity.StorableExpenditureRecord;

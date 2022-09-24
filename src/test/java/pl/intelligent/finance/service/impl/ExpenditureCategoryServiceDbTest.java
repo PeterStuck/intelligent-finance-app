@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
-import pl.intelligent.finance.entity.IExpenditureCategory;
-import pl.intelligent.finance.entity.IExpenditureCategoryMatcher;
-import pl.intelligent.finance.entity.ExpenditureCategoryMatcherType;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategoryMatcher;
+import pl.intelligent.finance.persistence.entity.ExpenditureCategoryMatcherType;
 import pl.intelligent.finance.service.IExpenditureCategoryMatcherService;
 import pl.intelligent.finance.service.IExpenditureCategoryService;
 

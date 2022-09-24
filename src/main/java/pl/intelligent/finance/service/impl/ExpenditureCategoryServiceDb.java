@@ -2,9 +2,9 @@ package pl.intelligent.finance.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.intelligent.finance.entity.IExpenditureCategory;
-import pl.intelligent.finance.entity.impl.ExpenditureCategory;
-import pl.intelligent.finance.repository.ExpenditureCategoryRepository;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.impl.ExpenditureCategory;
+import pl.intelligent.finance.persistence.repository.ExpenditureCategoryRepository;
 import pl.intelligent.finance.service.IExpenditureCategoryService;
 
 import java.util.Collection;

@@ -3,7 +3,7 @@ package pl.intelligent.finance.cache.loader;
 import com.hazelcast.map.MapLoader;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategory;
 import pl.intelligent.finance.cache.util.ExpenditureCategoryAdapter;
-import pl.intelligent.finance.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
 import pl.intelligent.finance.service.IExpenditureCategoryService;
 
 import java.util.Collection;

@@ -1,9 +1,9 @@
-package pl.intelligent.finance.entity.impl;
+package pl.intelligent.finance.persistence.entity.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pl.intelligent.finance.entity.IExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.IExpenditureRecord;
 
 import javax.persistence.*;
 import java.util.Objects;

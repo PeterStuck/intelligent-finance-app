@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategory;
 import pl.intelligent.finance.cache.entity.HazelcastExpenditureCategoryMatcher;
-import pl.intelligent.finance.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
 import pl.intelligent.finance.exception.ExceptionUtil;
 import pl.intelligent.finance.exception.InvalidDataException;
 import pl.intelligent.finance.resource.entity.ExpenditureCategoryMatcherType;

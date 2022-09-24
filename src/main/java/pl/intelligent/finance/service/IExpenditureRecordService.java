@@ -1,6 +1,6 @@
 package pl.intelligent.finance.service;
 
-import pl.intelligent.finance.entity.IExpenditureRecord;
+import pl.intelligent.finance.persistence.entity.IExpenditureRecord;
 
 import java.util.Collection;
 import java.util.List;

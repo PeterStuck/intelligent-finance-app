@@ -1,10 +1,10 @@
-package pl.intelligent.finance.entity.impl;
+package pl.intelligent.finance.persistence.entity.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import pl.intelligent.finance.entity.IBankStatement;
+import pl.intelligent.finance.persistence.entity.IBankStatement;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

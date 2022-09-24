@@ -1,6 +1,6 @@
 package pl.intelligent.finance.service;
 
-import pl.intelligent.finance.entity.IExpenditureCategory;
+import pl.intelligent.finance.persistence.entity.IExpenditureCategory;
 
 import java.util.Collection;
 import java.util.List;
