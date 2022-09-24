@@ -1,16 +1,21 @@
 package pl.intelligent.finance.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 public abstract class ServiceBase<I, E> {
 
-    protected <T> T withException(Callable<T> callable) throws Exception {
+    private static final Logger LOGGER = LoggerFactory.getLogger("ServiceDbLayerLogger");
+
+    protected <T> T withExceptionHandler(Callable<T> callable) throws Exception {
         try {
             return callable.call();
         } catch (Exception e) {
-            // TODO add logging
+            LOGGER.error("Error occurred on service", e);
             throw e;
         }
     }
@@ -27,6 +32,10 @@ public abstract class ServiceBase<I, E> {
         return entities.stream()
                 .map(el -> (E) el)
                 .collect(Collectors.toList());
+    }
+
+    protected Logger logger() {
+        return LOGGER;
     }
 
 }

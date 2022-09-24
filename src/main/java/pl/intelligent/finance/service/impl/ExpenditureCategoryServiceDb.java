@@ -38,22 +38,44 @@ public class ExpenditureCategoryServiceDb extends ServiceBase<IExpenditureCatego
 
     @Override
     public IExpenditureCategory create(IExpenditureCategory category) throws Exception {
-        return withException(() -> repository.saveAndFlush((ExpenditureCategory) category));
+        return withExceptionHandler(() -> {
+            logger().debug("Persisting expenditure category: {}", category);
+
+            var persistedCategory = repository.saveAndFlush((ExpenditureCategory) category);
+            logger().debug("Expenditure category persisted: {}", persistedCategory);
+
+            return persistedCategory;
+        });
     }
 
     @Override
     public IExpenditureCategory update(IExpenditureCategory category) throws Exception {
-        return withException(() -> repository.saveAndFlush((ExpenditureCategory) category));
+        return withExceptionHandler(() -> {
+            logger().debug("Updating expenditure category: {}", category);
+
+            var updatedCategory = repository.saveAndFlush((ExpenditureCategory) category);
+            logger().debug("Expenditure category updated: {}", updatedCategory);
+
+            return updatedCategory;
+        });
     }
 
     @Override
     public void delete(IExpenditureCategory category) {
+        logger().debug("Deleting expenditure category: {}", category);
+
         repository.delete((ExpenditureCategory) category);
+
+        logger().debug("Expenditure category: {} deleted", category.getName());
     }
 
     @Override
     public void deleteById(Integer id) {
+        logger().debug("Deleting expenditure category with id: {}", id);
+
         repository.deleteById(id);
+
+        logger().debug("Expenditure category with id: {} deleted", id);
     }
 
     @Override

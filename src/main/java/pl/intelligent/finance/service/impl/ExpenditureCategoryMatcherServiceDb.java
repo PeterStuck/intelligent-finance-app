@@ -31,22 +31,32 @@ public class ExpenditureCategoryMatcherServiceDb extends ServiceBase<IExpenditur
     @Transactional
     @Override
     public void deleteById(IExpenditureCategory category, int id) {
+        logger().debug("Deleting expenditure category matcher by id: {}", id);
+
         matcherRepository.deleteById(id);
         categoryRepository.saveAndFlush((ExpenditureCategory) category);
+        logger().debug("Expenditure category matcher with id: {} was successfully deleted", id);
     }
 
     @Transactional
     @Override
     public void delete(IExpenditureCategory category, IExpenditureCategoryMatcher matcher) {
+        logger().debug("Deleting expenditure category matcher: {}", matcher);
+
         matcherRepository.delete((ExpenditureCategoryMatcher) matcher);
         categoryRepository.saveAndFlush((ExpenditureCategory) category);
+        logger().debug("Expenditure category matcher: {} was successfully deleted", matcher);
     }
 
     @Transactional
     @Override
     public void deleteAllByIds(IExpenditureCategory category, List<Integer> ids) {
+        logger().debug("Deleting expenditure category matcher by ids: {}", ids);
+
         matcherRepository.deleteAllById(ids);
         categoryRepository.saveAndFlush((ExpenditureCategory) category);
+
+        logger().debug("Expenditure category matchers with ids: {} was successfully deleted", ids);
     }
 
 }

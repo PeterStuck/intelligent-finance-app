@@ -44,27 +44,46 @@ public class ExpenditureRecordServiceDb extends ServiceBase<IExpenditureRecord, 
 
     @Override
     public IExpenditureRecord create(IExpenditureRecord entity) throws Exception {
-        return withException(() -> repository.saveAndFlush((ExpenditureRecord) entity));
+        return withExceptionHandler(() -> {
+            logger().debug("Persisting expenditure record: {}", entity);
+
+            var persistedRecord = repository.saveAndFlush((ExpenditureRecord) entity);
+            logger().debug("Persisted expenditure record: {}", persistedRecord);
+
+            return persistedRecord;
+        });
     }
 
     @Transactional
     @Override
     public List<IExpenditureRecord> create(List<IExpenditureRecord> entities) throws Exception {
-        return withException(() ->
-                mapToInterface(
-                        repository.saveAllAndFlush(mapToEntity(entities))
-                )
-        );
+        return withExceptionHandler(() -> {
+            logger().debug("Batch persisting expenditure records: {}", entities);
+
+            var persistedRecords = mapToInterface(
+                        repository.saveAllAndFlush(mapToEntity(entities)));
+            logger().debug("Batch persisted expenditure records: {}", persistedRecords);
+
+            return persistedRecords;
+        });
     }
 
     @Override
     public void delete(IExpenditureRecord entity) {
+        logger().debug("Deleting expenditure record: {}", entity);
+
         repository.delete((ExpenditureRecord) entity);
+
+        logger().debug("Expenditure record: {} deleted successfully", entity);
     }
 
     @Override
     public void deleteById(Long id) {
+        logger().debug("Deleting expenditure record with id: {}", id);
+
         repository.deleteById(id);
+
+        logger().debug("Expenditure record with id: {} deleted successfully", id);
     }
 
     @Override

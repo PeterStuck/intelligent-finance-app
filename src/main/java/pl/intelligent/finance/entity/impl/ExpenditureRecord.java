@@ -3,7 +3,6 @@ package pl.intelligent.finance.entity.impl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import pl.intelligent.finance.entity.IExpenditureRecord;
 
 import javax.persistence.*;
@@ -12,7 +11,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 @Entity
 @Table(name = "EXPENDITURE_RECORD")
 public class ExpenditureRecord implements IExpenditureRecord {
@@ -99,5 +97,16 @@ public class ExpenditureRecord implements IExpenditureRecord {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, amount, categoryId, bankStatementId);
+    }
+
+    @Override
+    public String toString() {
+        return "ExpenditureRecord{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", amount=" + amount +
+                ", categoryId=" + categoryId +
+                ", bankStatementId='" + bankStatementId + '\'' +
+                '}';
     }
 }

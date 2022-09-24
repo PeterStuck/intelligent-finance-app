@@ -95,7 +95,7 @@ public class ExpenditureCategoryMatcher implements IExpenditureCategoryMatcher {
         return "ExpenditureCategoryMatcher{" +
                 "id=" + id +
                 ", pattern='" + pattern + '\'' +
-                ", matcherType=" + matcherType + // category can lead to stackoverflow
+                ", matcherType=" + matcherType + // category.toString can lead to stackoverflow
                 '}';
     }
 }
