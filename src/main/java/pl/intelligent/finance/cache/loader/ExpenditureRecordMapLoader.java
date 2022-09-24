@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ExpenditureRecordMapLoader implements MapLoader<Long, HazelcastExpenditureRecord> {
+public class ExpenditureRecordMapLoader extends MapLoaderBase<Long, HazelcastExpenditureRecord> implements MapLoader<Long, HazelcastExpenditureRecord> {
 
     private IExpenditureRecordService service;
 
@@ -21,43 +21,40 @@ public class ExpenditureRecordMapLoader implements MapLoader<Long, HazelcastExpe
 
     @Override
     public HazelcastExpenditureRecord load(Long id) {
-        try {
+        return loadWithExceptionHandler(() -> {
+            logger().debug("Load expenditure record by id: {}", id);
+
             IExpenditureRecord recordDb = service.findById(id);
-            if (recordDb != null) {
-                return ExpenditureRecordAdapter.createExpenditureRecord(recordDb);
-            }
-        } catch (Exception e) {
-            // TODO log exception
-        }
-        return null;
+            logger().debug("Loaded expenditure record: {} by id: {}", recordDb, id);
+
+            return ExpenditureRecordAdapter.createExpenditureRecord(recordDb);
+        });
     }
 
     @Override
     public Map<Long, HazelcastExpenditureRecord> loadAll(Collection<Long> ids) {
-        try {
-            if (ids != null && !ids.isEmpty()) {
-                List<IExpenditureRecord> recordsDb = service.findByIds(ids);
+        return loadAllWithExceptionHandler(() -> {
+            logger().debug("Load all expenditure records by ids: {}", ids);
 
-                return recordsDb.stream()
-                        .map(ExpenditureRecordAdapter::createExpenditureRecord)
-                        .collect(Collectors.toMap(HazelcastExpenditureRecord::getId, HazelcastExpenditureRecord::getInstance));
-            }
-        } catch (Exception e) {
-            // TODO log exception
-        }
+            List<IExpenditureRecord> recordsDb = service.findByIds(ids);
+            logger().debug("Loaded expenditure records: {} by ids: {}", recordsDb.size(), ids);
 
-        return null;
+            return recordsDb.stream()
+                    .map(ExpenditureRecordAdapter::createExpenditureRecord)
+                    .collect(Collectors.toMap(HazelcastExpenditureRecord::getId, HazelcastExpenditureRecord::getInstance));
+        });
     }
 
     @Override
     public Iterable<Long> loadAllKeys() {
-        try {
-            return service.findAllIds();
-        } catch (Exception e) {
-            // TODO log exception
-        }
+        return loadAllKeysWithExceptionHandler(() -> {
+            logger().debug("Load all expenditure record keys");
 
-        return null;
+            List<Long> allIds = service.findAllIds();
+            logger().debug("Loaded all expenditure record keys: {}", allIds);
+
+            return allIds;
+        });
     }
 
 }

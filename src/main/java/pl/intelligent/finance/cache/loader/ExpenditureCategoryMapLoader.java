@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ExpenditureCategoryMapLoader implements MapLoader<Integer, HazelcastExpenditureCategory> {
+public class ExpenditureCategoryMapLoader extends MapLoaderBase<Integer, HazelcastExpenditureCategory> implements MapLoader<Integer, HazelcastExpenditureCategory> {
 
     private IExpenditureCategoryService service;
 
@@ -21,43 +21,40 @@ public class ExpenditureCategoryMapLoader implements MapLoader<Integer, Hazelcas
 
     @Override
     public HazelcastExpenditureCategory load(Integer id) {
-        try {
+        return loadWithExceptionHandler(() -> {
+            logger().debug("Loading expenditure category by id: {}", id);
+
             IExpenditureCategory categoryDb = service.findById(id);
-            if (categoryDb != null) {
-                return ExpenditureCategoryAdapter.createExpenditureCategory(categoryDb);
-            }
-        } catch (Exception e) {
-            // TODO log exception
-        }
-        return null;
+            logger().debug("Loaded expenditure category: {} by id: {}", categoryDb, id);
+
+            return ExpenditureCategoryAdapter.createExpenditureCategory(categoryDb);
+        });
     }
 
     @Override
     public Map<Integer, HazelcastExpenditureCategory> loadAll(Collection<Integer> ids) {
-        try {
-            if (ids != null && !ids.isEmpty()) {
-                List<IExpenditureCategory> categoriesDb = service.findByIds(ids);
+        return loadAllWithExceptionHandler(() -> {
+            logger().debug("Loading all expenditure categories by ids: {}", ids);
 
-                return categoriesDb.stream()
-                        .map(ExpenditureCategoryAdapter::createExpenditureCategory)
-                        .collect(Collectors.toMap(HazelcastExpenditureCategory::getId, HazelcastExpenditureCategory::getInstance));
-            }
-        } catch (Exception e) {
-            // TODO log exception
-        }
+            List<IExpenditureCategory> categoriesDb = service.findByIds(ids);
+            logger().debug("Loaded expenditure categories: {} by ids: {}", categoriesDb.size(), ids);
 
-        return null;
+            return categoriesDb.stream()
+                    .map(ExpenditureCategoryAdapter::createExpenditureCategory)
+                    .collect(Collectors.toMap(HazelcastExpenditureCategory::getId, HazelcastExpenditureCategory::getInstance));
+        });
     }
 
     @Override
     public Iterable<Integer> loadAllKeys() {
-        try {
-            return service.findAllIds();
-        } catch (Exception e) {
-            // TODO log exception
-        }
+        return loadAllKeysWithExceptionHandler(() -> {
+            logger().debug("Loading all expenditure category ids");
 
-        return null;
+            List<Integer> allIds = service.findAllIds();
+            logger().debug("Loaded expenditure category ids: {}", allIds);
+
+            return allIds;
+        });
     }
 
 }
