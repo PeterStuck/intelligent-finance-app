@@ -256,8 +256,8 @@ public class ExpenditureRecordServiceDbTest extends ServiceTestBase {
         assertThrows(EmptyResultDataAccessException.class, () -> service.deleteById(99L));
     }
 
-    private IExpenditureRecord createEntity(String name, String bankStatementId,
-                                           int categoryId, double amount) {
+    private IExpenditureRecord createEntity(String name, Integer bankStatementId,
+                                            int categoryId, double amount) {
         ExpenditureRecord entity = (ExpenditureRecord) service.createInstance();
         entity.setName(name);
         entity.setBankStatementId(bankStatementId);

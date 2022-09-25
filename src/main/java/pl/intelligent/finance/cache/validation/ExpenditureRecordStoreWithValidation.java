@@ -31,7 +31,7 @@ public class ExpenditureRecordStoreWithValidation implements ExpenditureRecordSt
     }
 
     @Override
-    public List<StorableExpenditureRecord> getAllByBankStatementId(String bankStatementId) {
+    public List<StorableExpenditureRecord> getAllByBankStatementId(Integer bankStatementId) {
         return recordStore.getAllByBankStatementId(bankStatementId);
     }
 

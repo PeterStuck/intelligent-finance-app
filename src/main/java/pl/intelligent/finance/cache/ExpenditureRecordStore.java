@@ -13,6 +13,6 @@ public interface ExpenditureRecordStore {
 
     List<StorableExpenditureRecord> batchAdd(List<StorableExpenditureRecord> expenditureRecords) throws InvalidDataException;
 
-    List<StorableExpenditureRecord> getAllByBankStatementId(String bankStatementId);
+    List<StorableExpenditureRecord> getAllByBankStatementId(Integer bankStatementId);
 
 }

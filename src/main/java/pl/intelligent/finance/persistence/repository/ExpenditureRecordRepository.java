@@ -11,8 +11,8 @@ public interface ExpenditureRecordRepository extends JpaRepository<ExpenditureRe
     @Query("SELECT id FROM ExpenditureRecord")
     List<Long> findAllIds();
 
-    ExpenditureRecord findByNameAndBankStatementId(String name, String bankStatementId);
+    ExpenditureRecord findByNameAndBankStatementId(String name, Integer bankStatementId);
 
-    List<ExpenditureRecord> findByBankStatementId(String bankStatementId);
+    List<ExpenditureRecord> findByBankStatementId(Integer bankStatementId);
 
 }

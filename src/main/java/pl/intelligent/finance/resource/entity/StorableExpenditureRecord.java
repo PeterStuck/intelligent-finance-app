@@ -10,6 +10,6 @@ public interface StorableExpenditureRecord {
 
     Integer getCategoryId();
 
-    String getBankStatementId();
+    Integer getBankStatementId();
 
 }

@@ -18,8 +18,8 @@ public interface IExpenditureRecord {
 
     void setCategoryId(Integer categoryId);
 
-    String getBankStatementId();
+    Integer getBankStatementId();
 
-    void setBankStatementId(String bankStatementId);
+    void setBankStatementId(Integer bankStatementId);
 
 }

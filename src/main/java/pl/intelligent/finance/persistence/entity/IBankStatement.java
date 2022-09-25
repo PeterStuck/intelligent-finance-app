@@ -2,6 +2,12 @@ package pl.intelligent.finance.persistence.entity;
 
 public interface IBankStatement {
 
-    String getId();
+    Integer getId();
+
+    void setId(Integer id);
+
+    String getName();
+
+    void setName(String name);
 
 }

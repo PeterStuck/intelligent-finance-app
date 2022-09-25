@@ -33,12 +33,12 @@ public class ExpenditureRecordServiceDb extends ServiceBase<IExpenditureRecord, 
     }
 
     @Override
-    public IExpenditureRecord findByNameAndBankStatementId(String name, String bankStatementId) {
+    public IExpenditureRecord findByNameAndBankStatementId(String name, Integer bankStatementId) {
         return repository.findByNameAndBankStatementId(name, bankStatementId);
     }
 
     @Override
-    public List<IExpenditureRecord> findByBankStatementId(String bankStatementId) {
+    public List<IExpenditureRecord> findByBankStatementId(Integer bankStatementId) {
         return mapToInterface(repository.findByBankStatementId(bankStatementId));
     }
 

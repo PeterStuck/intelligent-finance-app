@@ -105,7 +105,7 @@ public class HazelcastExpenditureRecordCache extends HazelcastCacheBase<Hazelcas
     }
 
     @Override
-    public List<StorableExpenditureRecord> getAllByBankStatementId(String bankStatementId) {
+    public List<StorableExpenditureRecord> getAllByBankStatementId(Integer bankStatementId) {
         logger().debug("Get All expenditure records by bankStatementId: {} from cache", bankStatementId);
         PredicateBuilder.EntryObject entryObject = Predicates.newPredicateBuilder().getEntryObject();
         Predicate predicate = entryObject.get("bankStatementId").equal(bankStatementId);

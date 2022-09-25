@@ -338,13 +338,13 @@ public class HazelcastExpenditureRecordCacheTest extends HazelcastCacheBaseTest 
     }
 
     private StorableExpenditureRecord createRecord(String expectedName, Double expectedAmount,
-                                                   Integer expectedCategoryId, String expectedBankStatementId) {
+                                                   Integer expectedCategoryId, Integer expectedBankStatementId) {
         return new HazelcastExpenditureRecord(null, expectedName,
                 expectedAmount, expectedCategoryId, expectedBankStatementId);
     }
 
     private StorableExpenditureRecord createRecord(Long expectedId, String expectedName, Double expectedAmount,
-                                                   Integer expectedCategoryId, String expectedBankStatementId) {
+                                                   Integer expectedCategoryId, Integer expectedBankStatementId) {
         return new HazelcastExpenditureRecord(expectedId, expectedName,
                 expectedAmount, expectedCategoryId, expectedBankStatementId);
     }

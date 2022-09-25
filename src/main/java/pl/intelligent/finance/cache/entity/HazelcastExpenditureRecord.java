@@ -23,7 +23,7 @@ public class HazelcastExpenditureRecord implements StorableExpenditureRecord, Id
     private String name;
     private Double amount;
     private Integer categoryId;
-    private String bankStatementId;
+    private Integer bankStatementId;
 
     public Long getId() {
         return id;
@@ -57,11 +57,11 @@ public class HazelcastExpenditureRecord implements StorableExpenditureRecord, Id
         this.categoryId = categoryId;
     }
 
-    public String getBankStatementId() {
+    public Integer getBankStatementId() {
         return bankStatementId;
     }
 
-    public void setBankStatementId(String bankStatementId) {
+    public void setBankStatementId(Integer bankStatementId) {
         this.bankStatementId = bankStatementId;
     }
 
@@ -101,7 +101,7 @@ public class HazelcastExpenditureRecord implements StorableExpenditureRecord, Id
                 .writeString(name)
                 .writeDouble(amount)
                 .writeInteger(categoryId)
-                .writeString(bankStatementId);
+                .writeInteger(bankStatementId);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class HazelcastExpenditureRecord implements StorableExpenditureRecord, Id
         name = deserializer.readString();
         amount = deserializer.readDouble();
         categoryId = deserializer.readInteger();
-        bankStatementId = deserializer.readString();
+        bankStatementId = deserializer.readInteger();
     }
 
     @Override

@@ -36,8 +36,8 @@ public class ExpenditureRecord implements IExpenditureRecord {
     @Column(name = "EXPENDITURE_CATEGORY_ID", nullable = false)
     private Integer categoryId;
 
-    @Column(name = "BANK_STATEMENT_ID", nullable = false, length = 20)
-    private String bankStatementId;
+    @Column(name = "BANK_STATEMENT_ID", nullable = false)
+    private Integer bankStatementId;
 
     @Override
     public Long getId() {
@@ -60,7 +60,7 @@ public class ExpenditureRecord implements IExpenditureRecord {
     }
 
     @Override
-    public String getBankStatementId() {
+    public Integer getBankStatementId() {
         return bankStatementId;
     }
 
@@ -76,7 +76,7 @@ public class ExpenditureRecord implements IExpenditureRecord {
         this.categoryId = categoryId;
     }
 
-    public void setBankStatementId(String bankStatementId) {
+    public void setBankStatementId(Integer bankStatementId) {
         this.bankStatementId = bankStatementId;
     }
 

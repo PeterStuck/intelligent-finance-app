@@ -35,7 +35,7 @@ public class HazelcastExpenditureRecordSerializationTest {
 
     @Test
     public void serializeTest() {
-        HazelcastExpenditureRecord written = new HazelcastExpenditureRecord(1L, "test", 10.0, 1, "test");
+        HazelcastExpenditureRecord written = new HazelcastExpenditureRecord(1L, "test", 10.0, 1, 1);
 
         map.set(1L, written);
 

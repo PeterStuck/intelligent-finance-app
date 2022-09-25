@@ -13,9 +13,9 @@ public interface IExpenditureRecordService {
 
     List<Long> findAllIds();
 
-    IExpenditureRecord findByNameAndBankStatementId(String name, String bankStatementId);
+    IExpenditureRecord findByNameAndBankStatementId(String name, Integer bankStatementId);
 
-    List<IExpenditureRecord> findByBankStatementId(String bankStatementId);
+    List<IExpenditureRecord> findByBankStatementId(Integer bankStatementId);
 
     IExpenditureRecord create(IExpenditureRecord entity) throws Exception;
 
